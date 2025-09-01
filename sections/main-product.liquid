@@ -15,7 +15,7 @@
 {%- endif -%}
 
 {%- if product.media.size > 0 -%}
-  <link rel="stylesheet" href="{{ 'media-gallery.css' | asset_url }}">
+  <link rel="stylesheet" href="{{ 'product-gallery.css' | asset_url }}">
 {%- endif -%}
 
 {%- if product.metafields.reviews.rating.value != blank -%}
@@ -32,6 +32,7 @@
 {%- endif -%}
 
 <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'product-gallery.js' | asset_url }}" defer></script>
 
 {%- liquid
   # constants
@@ -100,19 +101,7 @@
   <div class="product js-product" data-section="{{ section.id }}">
     <div id="product-media" class="product-media product-media--{{ section.settings.media_layout }}">
       {%- if product.media.size > 0 -%}
-        {% render 'media-gallery',
-          product: product,
-          featured_media: featured_media,
-          media_ratio: media_ratio,
-          media_crop: section.settings.media_crop,
-          thumb_ratio: thumb_ratio,
-          thumb_crop: section.settings.thumb_crop,
-          first_3d_model: first_3d_model,
-          enable_zoom: section.settings.enable_zoom,
-          enable_lightbox_mobile: section.settings.enable_lightbox_mobile,
-          zoom_mode: section.settings.zoom_mode,
-          zoom_level: section.settings.hover_zoom
-        %}
+        {%- render 'product-media-gallery', product: product, enable_zoom: true, show_thumbs: true -%}
       {%- else -%}
         <div class="media relative">
           {{ 'image' | placeholder_svg_tag: 'media__placeholder' }}
