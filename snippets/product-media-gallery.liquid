@@ -1,0 +1,21 @@
+{% comment %}New product media gallery{% endcomment %}
+<div class="product-gallery" tabindex="0">
+  <div class="product-gallery__main">
+    {% for media in product.media %}
+      <img
+        src="{{ media | image_url }}"
+        alt="{{ media.alt | escape }}"
+        class="product-gallery__image{% if forloop.first %} is-active{% endif %}"
+        data-index="{{ forloop.index0 }}">
+    {% endfor %}
+  </div>
+  {% if product.media.size > 1 %}
+  <div class="product-gallery__thumbs">
+    {% for media in product.media %}
+      <button class="product-gallery__thumb{% if forloop.first %} is-active{% endif %}" type="button" data-index="{{ forloop.index0 }}" aria-label="{{ 'products.product.media.thumbnail' | t }}">
+        <img src="{{ media | image_url: width: 180 }}" alt="{{ media.alt | escape }}">
+      </button>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
