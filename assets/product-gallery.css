@@ -10,10 +10,6 @@
   max-width: var(--gallery-max-w);
 }
 
-.is-hidden {
-  display: none !important;
-}
-
 @media (min-width: 990px) {
   .cg-gallery {
     width: min(100%, var(--gallery-max-w));
