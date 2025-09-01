@@ -1,4 +1,4 @@
-<div class="product-gallery" data-product-gallery tabindex="0">
+<div class="product-gallery product-media-gallery" data-product-gallery tabindex="0" style="--desktop-gallery-max-w: {{ settings.gallery_max_width | default: 600 }}px;">
   <div class="product-gallery__main">
     {% for media in product.media %}
       <div class="product-gallery__media{% if forloop.first %} is-active{% endif %}" data-media-id="{{ media.id }}">
