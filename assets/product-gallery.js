@@ -1,39 +1,43 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const gallery = document.querySelector('[data-product-gallery]');
-  if (!gallery) return;
-  const mains = Array.from(gallery.querySelectorAll('.product-gallery__media'));
-  const thumbs = Array.from(gallery.querySelectorAll('.product-gallery__thumb'));
-  let index = mains.findIndex(el => el.classList.contains('is-active'));
-  const activate = newIndex => {
-    if (newIndex < 0 || newIndex >= mains.length) return;
-    mains[index].classList.remove('is-active');
-    thumbs[index].classList.remove('is-active');
-    index = newIndex;
-    mains[index].classList.add('is-active');
-    thumbs[index].classList.add('is-active');
-    thumbs[index].scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
-  };
-  thumbs.forEach((thumb, i) => {
-    thumb.addEventListener('click', () => activate(i));
-  });
-  gallery.addEventListener('keydown', e => {
-    switch (e.key) {
-      case 'ArrowLeft':
-        e.preventDefault();
-        activate(index - 1);
-        break;
-      case 'ArrowRight':
-        e.preventDefault();
-        activate(index + 1);
-        break;
-      case 'Home':
-        e.preventDefault();
-        activate(0);
-        break;
-      case 'End':
-        e.preventDefault();
-        activate(mains.length - 1);
-        break;
+  document.querySelectorAll('[data-product-gallery]').forEach(gallery => {
+    const medias = gallery.querySelectorAll('.product-gallery__media');
+    const thumbs = gallery.querySelectorAll('.product-gallery__thumb');
+    let activeIndex = 0;
+
+    function setActive(index) {
+      medias[activeIndex].classList.remove('is-active');
+      thumbs[activeIndex].classList.remove('is-active');
+
+      activeIndex = index;
+
+      medias[activeIndex].classList.add('is-active');
+      thumbs[activeIndex].classList.add('is-active');
+      thumbs[activeIndex].scrollIntoView({behavior: 'smooth', inline: 'center', block: 'nearest'});
     }
+
+    thumbs.forEach((thumb, i) => {
+      thumb.addEventListener('click', () => setActive(i));
+    });
+
+    gallery.addEventListener('keydown', e => {
+      switch (e.key) {
+        case 'ArrowLeft':
+          e.preventDefault();
+          setActive((activeIndex - 1 + medias.length) % medias.length);
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          setActive((activeIndex + 1) % medias.length);
+          break;
+        case 'Home':
+          e.preventDefault();
+          setActive(0);
+          break;
+        case 'End':
+          e.preventDefault();
+          setActive(medias.length - 1);
+          break;
+      }
+    });
   });
 });
