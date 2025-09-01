@@ -15,8 +15,7 @@
 @media (min-width: 769px) {
   :root {
     --product-column-padding: calc(8 * var(--space-unit));
-    /* Equal width for gallery and info columns */
-    --product-info-width: 50%;
+    --product-info-width: 47%;
   }
   .shopify-section:not(.product-details) {
     clear: both;
@@ -44,31 +43,25 @@
     height: 1px;
     background-color: rgba(var(--text-color)/0.15);
   }
-  .product-main {
-    display: flex;
-    align-items: flex-start;
+  .product-main .product-media,
+  .product-main + .product-details > .container {
+    width: calc(100% - var(--product-info-width));
+    float: left;
+    clear: left;
   }
   .product-main .product-media {
-    width: var(--product-info-width);
-    float: none;
-    clear: none;
     margin-top: 0;
     margin-bottom: 0;
     padding-top: calc(10 * var(--space-unit));
     padding-bottom: calc(10 * var(--space-unit));
     padding-inline-end: var(--product-column-padding);
   }
-  .product-main + .product-details > .container {
-    width: calc(100% - var(--product-info-width));
-    float: none;
-    clear: none;
-  }
   .product-main .product-info {
     position: relative;
     width: var(--product-info-width);
     padding: calc(10 * var(--space-unit)) 0;
     padding-inline-start: var(--product-column-padding);
-    float: none;
+    float: right;
     background-color: rgba(var(--bg-color));
   }
   .product-main .product-info--sticky {
