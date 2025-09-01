@@ -258,11 +258,6 @@
   <link rel="stylesheet" href="{{ 'main.css' | asset_url }}">
   <script src="{{ 'main.js' | asset_url }}" defer="defer"></script>
 
-  {% if request.page_type == 'product' %}
-    <link rel="stylesheet" href="{{ 'product-gallery.css' | asset_url }}">
-    <script src="{{ 'product-gallery.js' | asset_url }}" defer="defer"></script>
-  {% endif %}
-
   {%- if request.page_type contains 'customers' -%}
     <link rel="stylesheet" href="{{ 'customer.css' | asset_url }}">
   {%- endif -%}
