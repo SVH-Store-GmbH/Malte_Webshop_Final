@@ -35,8 +35,8 @@
 }
 
 .media-gallery__viewer {
-  border: 1px solid var(--gallery-border-color);
-  background-color: var(--gallery-bg-color);
+  border: none;
+  background-color: transparent;
 }
 
 .media-viewer,
@@ -68,6 +68,9 @@
   flex: 0 0 100%;
   text-align: center;
 }
+.media-viewer__item .media {
+  aspect-ratio: 1 / 1;
+}
 .media-viewer__item > deferred-media[loaded] {
   z-index: 3;
 }
@@ -92,10 +95,16 @@
 
 .media-gallery__thumbs {
   margin-top: var(--media-gap);
+  display: flex;
+  justify-content: center;
 }
 
 .media-thumbs__item {
   flex: 0 0 84px;
+}
+
+.media-thumbs {
+  justify-content: center;
 }
 
 .media-thumbs__btn {

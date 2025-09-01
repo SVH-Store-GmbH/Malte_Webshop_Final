@@ -109,8 +109,7 @@
 
 @media (min-width: 1024px) {
   .product-main .product-media {
-    position: sticky;
-    top: var(--header-end-padded, 70px);
+    position: static;
   }
 }
 
@@ -126,6 +125,21 @@
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.product-gallery-card {
+  text-align: center;
+  padding: 32px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+@media (min-width: 1024px) {
+  .product-gallery-card {
+    position: sticky;
+    top: var(--header-end-padded, 70px);
+  }
 }
 
 .product-info-card > .product-info__block {
