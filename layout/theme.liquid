@@ -23,6 +23,8 @@
 <head>
   {%- render 'doc-head-core' -%}
   {%- render 'doc-head-social' -%}
+  {{ 'product-gallery.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'product-gallery.js' | asset_url }}" defer="defer"></script>
 
   {%- style %}
     {{- settings.body_font | font_face: font_display: 'swap' -}}

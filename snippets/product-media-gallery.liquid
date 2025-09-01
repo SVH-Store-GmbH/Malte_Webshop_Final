@@ -1,21 +1,39 @@
-<div class="product-gallery" data-product-gallery tabindex="0" style="--gallery-desktop-max-w: {{ settings.gallery_max_width | default: 600 }}px">
-  <div class="product-gallery__main">
+{% comment %}
+  Modern sticky product media gallery with lightbox.
+{% endcomment %}
+<div class="cg-gallery" data-gallery style="--gallery-max-w: {{ section.settings.gallery_max_width | default: 600 }}px">
+  <div class="cg-gallery__stage" data-stage tabindex="0" aria-live="polite">
     {% for media in product.media %}
-      <div class="product-gallery__media{% if forloop.first %} is-active{% endif %}" data-media-id="{{ media.id }}">
-        {{ media | image_url: width: 1500 | image_tag:
-          loading: 'lazy',
-          class: 'product-gallery__image',
-          alt: media.alt | escape }}
+      <div class="cg-gallery__item{% if forloop.first %} is-active{% endif %}" data-index="{{ forloop.index0 }}" aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}">
+        {% render 'product-media',
+          media: media,
+          media_ratio: 1,
+          media_crop: 'none',
+          loop: section.settings.enable_video_looping,
+          lazy_load: forloop.index0 != 0,
+          enable_zoom: false
+        %}
       </div>
     {% endfor %}
+    <button type="button" class="cg-gallery__arrow cg-gallery__arrow--prev" aria-label="{{ 'products.product.media.previous' | t }}">
+      {% render 'icon-chevron-left' %}
+    </button>
+    <button type="button" class="cg-gallery__arrow cg-gallery__arrow--next" aria-label="{{ 'products.product.media.next' | t }}">
+      {% render 'icon-chevron-right' %}
+    </button>
   </div>
-  <div class="product-gallery__thumbs">
+  <div class="cg-gallery__thumbs" data-thumbs role="list">
     {% for media in product.media %}
-      <button type="button" class="product-gallery__thumb{% if forloop.first %} is-active{% endif %}" data-media-id="{{ media.id }}">
-        {{ media | image_url: width: 200 | image_tag:
-          loading: 'lazy',
-          class: 'product-gallery__thumb-image',
-          alt: media.alt | escape }}
+      <button type="button" class="cg-gallery__thumb{% if forloop.first %} is-active{% endif %}" data-index="{{ forloop.index0 }}" aria-label="{{ media.alt | default: 'Media ' | append: forloop.index }}" {% if forloop.first %}aria-current="true"{% endif %}>
+        {% assign thumb = media.preview_image %}
+        {% render 'image',
+          image: thumb,
+          src_width: 100,
+          srcset_2x: true,
+          lazy_load: true,
+          class: 'cg-gallery__thumb-image',
+          disable_focal_point: true
+        %}
       </button>
     {% endfor %}
   </div>
