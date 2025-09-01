@@ -1,18 +1,16 @@
 <div class="product-gallery" data-product-gallery tabindex="0">
   <div class="product-gallery__main">
     {%- for media in product.media -%}
-      <div class="product-gallery__media{% if forloop.first %} is-active{% endif %}" data-index="{{ forloop.index0 }}">
-        {{ media | image_url: width: 1500 | image_tag: loading: 'lazy', class: 'product-gallery__image', alt: media.alt | escape }}
+      <div class="product-gallery__media{% if forloop.first %} is-active{% endif %}" data-media-id="{{ media.id }}">
+        {{ media | image_url: width: 1200 | image_tag: loading: 'lazy', class: 'product-gallery__image', alt: media.alt | escape }}
       </div>
     {%- endfor -%}
   </div>
-  {%- if product.media.size > 1 -%}
-    <div class="product-gallery__thumbs">
-      {%- for media in product.media -%}
-        <button type="button" class="product-gallery__thumb{% if forloop.first %} is-active{% endif %}" data-index="{{ forloop.index0 }}">
-          {{ media | image_url: width: 200 | image_tag: loading: 'lazy', class: 'product-gallery__thumb-image', alt: media.alt | escape }}
-        </button>
-      {%- endfor -%}
-    </div>
-  {%- endif -%}
+  <div class="product-gallery__thumbs">
+    {%- for media in product.media -%}
+      <button type="button" class="product-gallery__thumb{% if forloop.first %} is-active{% endif %}" data-media-id="{{ media.id }}">
+        {{ media | image_url: width: 200 | image_tag: loading: 'lazy', class: 'product-gallery__thumb-image', alt: media.alt | escape }}
+      </button>
+    {%- endfor -%}
+  </div>
 </div>
