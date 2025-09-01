@@ -4,7 +4,12 @@
 <div class="cg-gallery" data-gallery style="--gallery-max-w: {{ section.settings.gallery_max_width | default: 600 }}px; --gallery-aspect: 1/1;">
   <div class="cg-gallery__stage" data-stage tabindex="0" aria-live="polite">
     {% for media in product.media %}
-      <div class="cg-gallery__item{% if forloop.first %} is-active{% endif %}" data-index="{{ forloop.index0 }}" aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}">
+      {% assign variant_ids = media.variants | map: 'id' | join: ',' %}
+      <div class="cg-gallery__item{% if forloop.first %} is-active{% endif %}"
+           data-index="{{ forloop.index0 }}"
+           data-media-id="{{ media.id }}"
+           data-variant-ids="{{ variant_ids }}"
+           aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}">
         {% render 'product-media',
           media: media,
           media_ratio: 1,
@@ -24,7 +29,12 @@
   </div>
   <div class="cg-gallery__thumbs" data-thumbs role="list">
     {% for media in product.media %}
-      <button type="button" class="cg-gallery__thumb{% if forloop.first %} is-active{% endif %}" data-index="{{ forloop.index0 }}" aria-label="{{ media.alt | default: 'Media ' | append: forloop.index }}" {% if forloop.first %}aria-current="true"{% endif %}>
+      {% assign variant_ids = media.variants | map: 'id' | join: ',' %}
+      <button type="button" class="cg-gallery__thumb{% if forloop.first %} is-active{% endif %}"
+              data-index="{{ forloop.index0 }}"
+              data-media-id="{{ media.id }}"
+              data-variant-ids="{{ variant_ids }}"
+              aria-label="{{ media.alt | default: 'Media ' | append: forloop.index }}" {% if forloop.first %}aria-current="true"{% endif %}>
         {% assign thumb = media.preview_image %}
         {% render 'image',
           image: thumb,

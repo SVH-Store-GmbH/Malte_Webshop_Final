@@ -4,6 +4,9 @@ class ProductGallery {
     this.stage = root.querySelector('[data-stage]');
     this.items = Array.from(root.querySelectorAll('.cg-gallery__item'));
     this.thumbs = Array.from(root.querySelectorAll('.cg-gallery__thumb'));
+    this.allItems = this.items.slice();
+    this.allThumbs = this.thumbs.slice();
+    this.product = this.root.closest('.js-product');
     this.prev = root.querySelector('.cg-gallery__arrow--prev');
     this.next = root.querySelector('.cg-gallery__arrow--next');
     this.activeIndex = 0;
@@ -16,6 +19,16 @@ class ProductGallery {
       btn.addEventListener('click', () => this.show(i));
       btn.addEventListener('keydown', (e) => this.onKey(e));
     });
+
+    if (this.product) {
+      const variantInput = this.product.querySelector('input[name="id"]');
+      if (variantInput) this.filterByVariant(variantInput.value);
+      this.product.addEventListener('on:variant:change', (e) => {
+        if (e.detail && e.detail.variant) {
+          this.filterByVariant(e.detail.variant.id, e.detail.variant.featured_media?.id);
+        }
+      });
+    }
   }
 
   onKey(e) {
@@ -114,6 +127,49 @@ class ProductGallery {
         }
       }
     });
+  }
+
+  filterByVariant(variantId, featuredMediaId) {
+    const idStr = variantId ? variantId.toString() : null;
+    const featuredStr = featuredMediaId ? featuredMediaId.toString() : null;
+    let showIndex = 0;
+
+    this.items = [];
+    this.thumbs = [];
+
+    this.allItems.forEach((item, index) => {
+      const ids = item.dataset.variantIds ? item.dataset.variantIds.split(',') : [];
+      const visible = !idStr || ids.length === 0 || ids.includes(idStr);
+      item.style.display = visible ? '' : 'none';
+      const thumb = this.allThumbs[index];
+      thumb.style.display = visible ? '' : 'none';
+      item.classList.remove('is-active');
+      item.setAttribute('aria-hidden', 'true');
+      thumb.classList.remove('is-active');
+      thumb.removeAttribute('aria-current');
+
+      if (visible) {
+        this.items.push(item);
+        this.thumbs.push(thumb);
+        if (featuredStr && item.dataset.mediaId === featuredStr) {
+          showIndex = this.items.length - 1;
+        }
+      }
+    });
+
+    this.activeIndex = 0;
+    if (this.items.length > 0) {
+      this.show(showIndex);
+    }
+
+    const arrowsVisible = this.items.length > 1;
+    this.prev.style.display = arrowsVisible ? '' : 'none';
+    this.next.style.display = arrowsVisible ? '' : 'none';
+
+    if (this.modal) {
+      this.modal.remove();
+      this.modal = null;
+    }
   }
 
   modalKeydown(e) {
