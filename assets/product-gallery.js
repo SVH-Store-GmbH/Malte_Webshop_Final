@@ -10,24 +10,43 @@ class ProductGallery {
     this.prev = root.querySelector('.cg-gallery__arrow--prev');
     this.next = root.querySelector('.cg-gallery__arrow--next');
     this.activeIndex = 0;
+    this.activeVariantId = this.root.dataset.initialVariantId || null;
 
     this.prev.addEventListener('click', () => this.show(this.activeIndex - 1));
     this.next.addEventListener('click', () => this.show(this.activeIndex + 1));
     this.stage.addEventListener('click', () => this.openModal());
     this.stage.addEventListener('keydown', (e) => this.onKey(e));
     this.thumbs.forEach((btn, i) => {
-      btn.addEventListener('click', () => this.show(i));
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.show(i);
+      });
       btn.addEventListener('keydown', (e) => this.onKey(e));
     });
 
+    this.filterGalleryByVariant(this.activeVariantId);
+
     if (this.product) {
       const variantInput = this.product.querySelector('input[name="id"]');
-      if (variantInput) this.filterByVariant(variantInput.value);
-      this.product.addEventListener('on:variant:change', (e) => {
-        if (e.detail && e.detail.variant) {
-          this.filterByVariant(e.detail.variant.id, e.detail.variant.featured_media?.id);
+      if (variantInput) {
+        variantInput.addEventListener('change', (e) => {
+          this.activeVariantId = e.target.value;
+          this.filterGalleryByVariant(this.activeVariantId);
+        });
+      }
+
+      const handleVariantEvent = (e) => {
+        const id = e.detail?.variant?.id || e.detail?.id;
+        if (id) {
+          this.activeVariantId = id;
+          this.filterGalleryByVariant(this.activeVariantId);
         }
-      });
+      };
+
+      this.product.addEventListener('variant:change', handleVariantEvent);
+      this.product.addEventListener('product:variant:change', handleVariantEvent);
+      this.product.addEventListener('on:variant:change', handleVariantEvent);
     }
   }
 
@@ -66,7 +85,7 @@ class ProductGallery {
     this.items[this.activeIndex].setAttribute('aria-hidden', 'false');
     this.thumbs[this.activeIndex].classList.add('is-active');
     this.thumbs[this.activeIndex].setAttribute('aria-current', 'true');
-    this.thumbs[this.activeIndex].scrollIntoView({ inline: 'center', behavior: 'smooth' });
+    this.thumbs[this.activeIndex].scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
   }
 
   buildModal() {
@@ -129,33 +148,46 @@ class ProductGallery {
     });
   }
 
-  filterByVariant(variantId, featuredMediaId) {
+  filterGalleryByVariant(variantId) {
     const idStr = variantId ? variantId.toString() : null;
-    const featuredStr = featuredMediaId ? featuredMediaId.toString() : null;
-    let showIndex = 0;
-
-    this.items = [];
-    this.thumbs = [];
 
     this.allItems.forEach((item, index) => {
-      const ids = item.dataset.variantIds ? item.dataset.variantIds.split(',') : [];
-      const visible = !idStr || ids.length === 0 || ids.includes(idStr);
-      item.style.display = visible ? '' : 'none';
+      const ids = item.dataset.variantIds ? item.dataset.variantIds.split(',').filter(Boolean) : [];
+      const isShared = ids.length === 0;
+      const visible = !idStr || isShared || ids.includes(idStr);
+      item.classList.toggle('is-hidden', !visible);
       const thumb = this.allThumbs[index];
-      thumb.style.display = visible ? '' : 'none';
+      thumb.classList.toggle('is-hidden', !visible);
       item.classList.remove('is-active');
       item.setAttribute('aria-hidden', 'true');
       thumb.classList.remove('is-active');
       thumb.removeAttribute('aria-current');
+    });
 
-      if (visible) {
-        this.items.push(item);
-        this.thumbs.push(thumb);
-        if (featuredStr && item.dataset.mediaId === featuredStr) {
-          showIndex = this.items.length - 1;
+    this.items = this.allItems.filter((el) => !el.classList.contains('is-hidden'));
+    this.thumbs = this.allThumbs.filter((el) => !el.classList.contains('is-hidden'));
+
+    let showIndex = 0;
+    const currentVisible = this.items.findIndex((el) => el.classList.contains('is-active'));
+    if (currentVisible !== -1) {
+      showIndex = currentVisible;
+    } else {
+      const variantSpecific = this.items.find((el) => {
+        const ids = el.dataset.variantIds ? el.dataset.variantIds.split(',').filter(Boolean) : [];
+        return ids.length > 0 && idStr && ids.includes(idStr);
+      });
+      if (variantSpecific) {
+        showIndex = this.items.indexOf(variantSpecific);
+      } else {
+        const shared = this.items.find((el) => {
+          const ids = el.dataset.variantIds ? el.dataset.variantIds.split(',').filter(Boolean) : [];
+          return ids.length === 0;
+        });
+        if (shared) {
+          showIndex = this.items.indexOf(shared);
         }
       }
-    });
+    }
 
     this.activeIndex = 0;
     if (this.items.length > 0) {
