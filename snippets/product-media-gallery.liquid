@@ -1,20 +1,14 @@
 {% comment %}
   Modern sticky product media gallery with lightbox.
 {% endcomment %}
-<div class="cg-gallery" data-gallery data-initial-variant-id="{{ product.selected_or_first_available_variant.id }}" style="--gallery-max-w: {{ section.settings.gallery_max_width | default: 600 }}px; --gallery-aspect: 1/1;">
+<div class="cg-gallery" data-gallery style="--gallery-max-w: {{ section.settings.gallery_max_width | default: 600 }}px; --gallery-aspect: 1/1;">
   <div class="cg-gallery__stage" data-stage tabindex="0" aria-live="polite">
     {% for media in product.media %}
-      {% assign variant_ids_for_media = '' %}
-      {% for v in product.variants %}
-        {% if v.featured_media and v.featured_media.id == media.id %}
-          {% assign variant_ids_for_media = variant_ids_for_media | append: v.id | append: ',' %}
-        {% endif %}
-      {% endfor %}
-      {% assign variant_ids_for_media = variant_ids_for_media | split: ',' | uniq | compact | join: ',' %}
+      {% assign variant_ids = media.variants | map: 'id' | join: ',' %}
       <div class="cg-gallery__item{% if forloop.first %} is-active{% endif %}"
            data-index="{{ forloop.index0 }}"
            data-media-id="{{ media.id }}"
-           data-variant-ids="{{ variant_ids_for_media }}"
+           data-variant-ids="{{ variant_ids }}"
            aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}">
         {% render 'product-media',
           media: media,
@@ -35,17 +29,11 @@
   </div>
   <div class="cg-gallery__thumbs" data-thumbs role="list">
     {% for media in product.media %}
-      {% assign variant_ids_for_media = '' %}
-      {% for v in product.variants %}
-        {% if v.featured_media and v.featured_media.id == media.id %}
-          {% assign variant_ids_for_media = variant_ids_for_media | append: v.id | append: ',' %}
-        {% endif %}
-      {% endfor %}
-      {% assign variant_ids_for_media = variant_ids_for_media | split: ',' | uniq | compact | join: ',' %}
-      <button type="button" class="cg-gallery__thumb cg-thumb{% if forloop.first %} is-active{% endif %}"
+      {% assign variant_ids = media.variants | map: 'id' | join: ',' %}
+      <button type="button" class="cg-gallery__thumb{% if forloop.first %} is-active{% endif %}"
               data-index="{{ forloop.index0 }}"
               data-media-id="{{ media.id }}"
-              data-variant-ids="{{ variant_ids_for_media }}"
+              data-variant-ids="{{ variant_ids }}"
               aria-label="{{ media.alt | default: 'Media ' | append: forloop.index }}" {% if forloop.first %}aria-current="true"{% endif %}>
         {% assign thumb = media.preview_image %}
         {% render 'image',
