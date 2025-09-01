@@ -10,23 +10,37 @@ class ProductGallery {
     this.prev = root.querySelector('.cg-gallery__arrow--prev');
     this.next = root.querySelector('.cg-gallery__arrow--next');
     this.activeIndex = 0;
+    this.activeVariantId = this.root.dataset.initialVariantId || null;
 
     this.prev.addEventListener('click', () => this.show(this.activeIndex - 1));
     this.next.addEventListener('click', () => this.show(this.activeIndex + 1));
     this.stage.addEventListener('click', () => this.openModal());
     this.stage.addEventListener('keydown', (e) => this.onKey(e));
     this.thumbs.forEach((btn, i) => {
-      btn.addEventListener('click', () => this.show(i));
+      btn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); this.show(i); });
       btn.addEventListener('keydown', (e) => this.onKey(e));
     });
 
     if (this.product) {
-      const variantInput = this.product.querySelector('input[name="id"]');
-      if (variantInput) this.filterByVariant(variantInput.value);
-      this.product.addEventListener('on:variant:change', (e) => {
-        if (e.detail && e.detail.variant) {
-          this.filterByVariant(e.detail.variant.id, e.detail.variant.featured_media?.id);
-        }
+      const variantInput = this.product.querySelector('[name="id"]');
+      const initial = variantInput ? variantInput.value : this.activeVariantId;
+      if (initial) this.filterGalleryByVariant(initial);
+
+      const changeHandler = (variantId) => {
+        this.activeVariantId = variantId;
+        this.filterGalleryByVariant(variantId);
+      };
+
+      if (variantInput) {
+        variantInput.addEventListener('change', (e) => changeHandler(e.target.value));
+      }
+
+      ['variant:change', 'product:variant:change', 'on:variant:change'].forEach((evt) => {
+        this.product.addEventListener(evt, (e) => {
+          if (e.detail && e.detail.variant) {
+            changeHandler(e.detail.variant.id);
+          }
+        });
       });
     }
   }
@@ -66,7 +80,7 @@ class ProductGallery {
     this.items[this.activeIndex].setAttribute('aria-hidden', 'false');
     this.thumbs[this.activeIndex].classList.add('is-active');
     this.thumbs[this.activeIndex].setAttribute('aria-current', 'true');
-    this.thumbs[this.activeIndex].scrollIntoView({ inline: 'center', behavior: 'smooth' });
+    this.thumbs[this.activeIndex].scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
   }
 
   buildModal() {
@@ -129,20 +143,19 @@ class ProductGallery {
     });
   }
 
-  filterByVariant(variantId, featuredMediaId) {
+  filterGalleryByVariant(variantId) {
     const idStr = variantId ? variantId.toString() : null;
-    const featuredStr = featuredMediaId ? featuredMediaId.toString() : null;
-    let showIndex = 0;
+    const currentMediaId = this.items[this.activeIndex]?.dataset.mediaId;
 
     this.items = [];
     this.thumbs = [];
 
     this.allItems.forEach((item, index) => {
       const ids = item.dataset.variantIds ? item.dataset.variantIds.split(',') : [];
-      const visible = !idStr || ids.length === 0 || ids.includes(idStr);
-      item.style.display = visible ? '' : 'none';
+      const visible = ids.length === 0 || (idStr && ids.includes(idStr));
       const thumb = this.allThumbs[index];
-      thumb.style.display = visible ? '' : 'none';
+      item.classList.toggle('is-hidden', !visible);
+      thumb.classList.toggle('is-hidden', !visible);
       item.classList.remove('is-active');
       item.setAttribute('aria-hidden', 'true');
       thumb.classList.remove('is-active');
@@ -151,13 +164,24 @@ class ProductGallery {
       if (visible) {
         this.items.push(item);
         this.thumbs.push(thumb);
-        if (featuredStr && item.dataset.mediaId === featuredStr) {
-          showIndex = this.items.length - 1;
-        }
       }
     });
 
-    this.activeIndex = 0;
+    let showIndex = this.items.findIndex((el) => el.dataset.mediaId === currentMediaId);
+    if (showIndex === -1) {
+      showIndex = this.items.findIndex((el) => {
+        const ids = el.dataset.variantIds ? el.dataset.variantIds.split(',') : [];
+        return ids.length > 0 && idStr && ids.includes(idStr);
+      });
+    }
+    if (showIndex === -1) {
+      showIndex = this.items.findIndex((el) => {
+        const ids = el.dataset.variantIds ? el.dataset.variantIds.split(',') : [];
+        return ids.length === 0;
+      });
+    }
+    if (showIndex === -1) showIndex = 0;
+
     if (this.items.length > 0) {
       this.show(showIndex);
     }
