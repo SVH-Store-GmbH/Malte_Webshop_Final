@@ -267,11 +267,6 @@
     <noscript><link rel="stylesheet" href="{{ 'swatches.css' | asset_url }}"></noscript>
   {%- endif -%}
 
-  {%- if request.page_type == 'product' -%}
-    <link rel="stylesheet" href="{{ 'product-gallery.css' | asset_url }}">
-    <script src="{{ 'product-gallery.js' | asset_url }}" defer="defer"></script>
-  {%- endif -%}
-
   {{ content_for_header }}
 
   {%- if request.design_mode -%}
