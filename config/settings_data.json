@@ -517,7 +517,7 @@
     "animations_enabled": "mobile_desktop",
     "animation_speed": "medium",
     "favicon": "shopify://shop_images/coolgadget.png",
-    "image_quality": "1",
+    "image_quality": "1.25",
     "show_blur_messages": true,
     "blur_message_1": "CoolGadget.de",
     "blur_message_2": "Dein Smartphone verdient mehr",
