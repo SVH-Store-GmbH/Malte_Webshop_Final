@@ -1,0 +1,202 @@
+:root {
+  /*
+    Diese Variablen steuern Höhe, Ränder und Abstände des Headers.
+    clamp() stellt sicher, dass die Werte zwischen einem Minimum und einem Maximum bleiben und
+    sich sanft mit der Viewportbreite skalieren. So bleibt der Header auf großen und kleinen
+    Bildschirmen proportional und immer nutzbar.
+  */
+  --cg-header-h: clamp(64px, 12vw, 96px);
+  --cg-header-edge: clamp(16px, 3vw, 32px);
+  /*
+    Platzhalter für die tatsächlichen Abstände links und rechts. Diese können per JavaScript
+    dynamisch gesetzt werden (siehe Beispiel in der begleitenden Dokumentation), falls Sie
+    den exakten Platzbedarf des Logos oder der Icon‑Gruppe berücksichtigen möchten.
+  */
+  --cg-pad-left: var(--cg-header-edge);
+  --cg-pad-right: var(--cg-header-edge);
+}
+
+/*
+  Hauptcontainer des Headers: Er wird als flex‑Box behandelt, so dass alle direkten
+  Elemente (Logo, Navigation, Icon‑Gruppe) horizontal in einer Linie liegen. Mit
+  position: relative können die logo‑ und Icon‑Cluster absolut positioniert werden.
+*/
+/*
+  Alle Anpassungen für die Desktop‑Darstellung befinden sich innerhalb eines
+  Media‑Queries. So bleibt die mobile Version des Headers unberührt und nutzt weiterhin
+  das ursprüngliche Theme‑Layout. Der Breakpoint richtet sich nach den vom
+  Theme verwendeten „md“‑Klassen (min‑width: 768 px).
+*/
+@media (min-width: 768px) {
+  store-header.header .header__grid.container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--cg-header-h);
+    padding-left: var(--cg-pad-left);
+    padding-right: var(--cg-pad-right);
+    box-sizing: border-box;
+    gap: 0 !important;
+  }
+
+  /*
+    Linker Cluster mit Logo. Absolut positioniert, um unabhängig vom Flex‑Flow an der linken
+    Seite zu bleiben. transform: translateY(-50%) sorgt dafür, dass das Element vertikal
+    mittig im Header steht.
+  */
+  store-header.header .header__logo {
+    position: absolute;
+    left: var(--cg-header-edge);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+  }
+
+  /*
+    Logo‑Bild an die Höhe des Headers anpassen. Die Höhe wird als Anteil der definierten
+    Header‑Höhe gesetzt; so skaliert das Bild automatisch mit.
+  */
+  store-header.header .header__logo img {
+    height: calc(var(--cg-header-h) * 0.8);
+    width: auto;
+    display: block;
+  }
+
+  /*
+    Der Navigationsbereich wird mittig in der verbleibenden Fläche angezeigt. align‑items
+    sorgt dafür, dass alle Menüpunkte die gleiche Höhe haben und vertikal mittig liegen.
+  */
+  store-header.header .main-menu__content {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+
+  /*
+    Rechter Cluster mit Icons (Suche, Warenkorb, Konto). Dieser wird ebenfalls absolut
+    positioniert, damit er immer am rechten Rand ausgerichtet ist. Das Gap wird mit
+    clamp() responsiv gehalten.
+  */
+  store-header.header .header__icons {
+    position: absolute;
+    right: var(--cg-header-edge);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: clamp(8px, 1.5vw, 16px);
+  }
+
+  /*
+    Ein konsistenter Klickbereich für die Icons: Runde Buttons, die auf kleineren
+    Bildschirmen schrumpfen. border-radius: 50% erzeugt Kreise.
+  */
+  store-header.header .header__icons a,
+  store-header.header .header__icons button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(32px, 6vw, 48px);
+    height: clamp(32px, 6vw, 48px);
+    line-height: 0;
+    border-radius: 50%;
+  }
+
+  /*
+    Die SVG‑Icons innerhalb der Buttons erhalten eine flexible Größe. So bleiben sie auf
+    allen Geräten gut erkennbar, ohne unproportional zu wirken.
+  */
+  store-header.header .header__icons svg {
+    width: clamp(18px, 4vw, 24px);
+    height: clamp(18px, 4vw, 24px);
+  }
+
+  /*
+    Hinweis: Die Suchleiste wird in einer separaten CSS‑Datei (cg-header-row-desktop-search.css)
+    positioniert und skaliert. Hier nehmen wir keine Anpassungen mehr vor, damit
+    diese sich nicht überschneiden.
+  */
+}
+
+/*
+  Optionaler Stil für das Overlay und die Suchbox, falls predictive search genutzt wird.
+  Diese Regeln wurden aus der ursprünglichen Version übernommen und leicht bereinigt,
+  damit keine doppelten Definitionen entstehen. Sie beeinflussen das Verhalten der
+  Suchfunktion aber nicht die horizontale Ausrichtung des Headers.
+*/
+store-header.header predictive-search .overlay,
+predictive-search .overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2147482000;
+  transition: opacity 0.15s ease;
+}
+
+predictive-search[open] .overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+store-header.header predictive-search .search__form,
+predictive-search .search__form {
+  position: fixed;
+  top: 10vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(720px, 92vw);
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  z-index: 2147482002;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease, visibility 0s linear 0.12s;
+}
+
+predictive-search[open] .search__form {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.12s ease;
+}
+
+predictive-search .js-search-results {
+  position: fixed;
+  top: calc(10vh + 74px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(720px, 92vw);
+  max-height: 60vh;
+  overflow: auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  z-index: 2147482001;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease, visibility 0s linear 0.12s;
+}
+
+predictive-search[open] .js-search-results {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (max-width: 767px) {
+  /* Auf mobilen Geräten wird der Such-Overlay etwas höher an den oberen Rand verschoben. */
+  predictive-search .search__form {
+    top: 6vh;
+  }
+  predictive-search .js-search-results {
+    top: calc(6vh + 68px);
+  }
+}

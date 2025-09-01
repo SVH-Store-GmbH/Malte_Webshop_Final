@@ -1,0 +1,118 @@
+/* ===================================================================
+   custom-collection-list.css
+   Vollständig angepasste und optimierte Styles für die
+   Collection-List-Section (Scope: .cc-collection-list)
+   =================================================================== */
+
+/* 1. Carousel-Wrapper: Negativen Margin entfernen */
+.cc-collection-list carousel-slider {
+  margin: 0;
+}
+
+/* 2. Slider-Viewport: Overflow sichtbar machen und horizontales Padding */
+.cc-collection-list carousel-slider > .container.relative {
+  overflow: visible;
+  padding-inline: 2rem;   /* verhindert Anschnitt der ersten/letzten Karte */
+  position: relative;
+}
+
+/* 3. Slider-Track Overflow für Funktionalität */
+.cc-collection-list carousel-slider .slider {
+  overflow: hidden !important;
+}
+
+/* 4. Grid-Track: Inline-Grid, Inhalte fließen nebeneinander */
+.cc-collection-list .slider__grid {
+  display: inline-grid;
+  grid-auto-flow: column;
+  width: auto;
+  justify-content: start;
+  margin-inline: auto;
+  gap: 1rem;                /* Abstand der Karten zueinander */
+  padding: 0;
+}
+
+/* 5. List-Items: Inhalt zentrieren */
+.cc-collection-list .slider__grid li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;                /* Abstand über grid-gap steuern */
+}
+
+/* 6. Navigationspfeile sichtbar halten und tauschen */
+.cc-collection-list .slider-nav,
+.cc-collection-list .slider-nav.no-js-hidden {
+  display: flex !important;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  top: 50%;
+  width: calc(100% - 4rem);
+  transform: translateY(-50%);
+  z-index: 10;
+  pointer-events: all;
+}
+.cc-collection-list .slider-nav__btn {
+  display: inline-flex !important;
+  visibility: visible !important;
+  pointer-events: all;
+}
+
+/* 7. Pagination-Dots unter dem Carousel */
+.cc-collection-list carousel-slider .slider-pagination {
+  display: flex !important;
+  justify-content: center;
+  margin-top: 1rem;
+  position: relative;
+  z-index: 10;
+}
+
+/* 8. Bild-Wrapper: feste Größe und Zuschnitt */
+.cc-collection-list .card__media.relative {
+  padding-top: 0 !important;
+  width: 12rem;
+  height: 12rem;
+  overflow: hidden;
+}
+
+/* 9. Bild passt sich an den Wrapper an */
+.cc-collection-list .card__media.relative img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 10. Card-Info: Text zentrieren und Abstände */
+.cc-collection-list .card__info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 1rem;         /* Abstand unter dem Bild */
+  gap: 0.25rem;             /* Abstand zwischen Titel und Link */
+  width: auto;              /* Breite passt sich Inhalt an */
+}
+
+/* 11. Titel formatieren und zentriert */
+.cc-collection-list .card__info .card__title {
+  font-size: 1.3rem;
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* 12. Kategorie-Link direkt unter dem Titel */
+.cc-collection-list .card__info .card__collection--arrow {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.975rem;
+  margin: 0;
+  padding-top: 0.25rem;      /* leichter Abstand zum Titel */
+}
+
+/* 13. Hover-Effekt für die Karte */
+.cc-collection-list .card__media.relative:hover img {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}

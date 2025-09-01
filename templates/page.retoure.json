@@ -1,0 +1,348 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-contact",
+      "disabled": true,
+      "settings": {
+        "show_contact_title": false,
+        "heading_align": "text-center"
+      }
+    },
+    "image-banner": {
+      "type": "image-banner",
+      "blocks": {
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Kontakt aufnehmen",
+            "heading_size": "h1",
+            "heading_h1": true
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Wir freuen uns immer, dir behilflich zu sein! Bitte zögere nicht, uns bei Fragen oder Anliegen zu kontaktieren – unser Team steht dir jederzeit gerne zur Verfügung.</p>",
+            "enlarge_text": true
+          }
+        },
+        "subheading_V7Yepm": {
+          "type": "subheading",
+          "settings": {
+            "text": "Telefonisch erreichbar von Montag bis Freitag, 07:30 bis 12:00 Uhr."
+          }
+        }
+      },
+      "block_order": [
+        "heading",
+        "text",
+        "subheading_V7Yepm"
+      ],
+      "settings": {
+        "image_desktop": "shopify://shop_images/kundenservice.webp",
+        "url": "",
+        "height_mode": "fixed",
+        "fixed_height_desktop": 530,
+        "fixed_height_mobile": 440,
+        "overlay_position": "justify-start items-center",
+        "overlay_text_align": "text-start",
+        "mob_center_text": true,
+        "mobile_stacked": false,
+        "color_scheme": "white",
+        "full_width": true,
+        "transparent_content_color": "#ffffff",
+        "tint_color": "#000000",
+        "tint_opacity": 40,
+        "prevent_animation": false
+      }
+    },
+    "icons_with_text_TrwWDW": {
+      "type": "icons-with-text",
+      "blocks": {
+        "item_hydr3H": {
+          "type": "item",
+          "settings": {
+            "icon": "email",
+            "heading": "E-Mail",
+            "text": "<p>info@coolgadget.de</p>",
+            "link": ""
+          }
+        },
+        "item_WHFPKt": {
+          "type": "item",
+          "settings": {
+            "icon": "phone",
+            "heading": "Telefon",
+            "text": "<p> 04461 7443200</p>",
+            "link": ""
+          }
+        },
+        "item_YkqMbq": {
+          "type": "item",
+          "settings": {
+            "icon": "chat_bubble",
+            "heading": "Kontaktformular",
+            "text": "<p>Schreib uns gerne</p>",
+            "link": ""
+          }
+        },
+        "item_gQFYAb": {
+          "type": "item",
+          "settings": {
+            "icon": "return",
+            "heading": "Umtausch",
+            "text": "<p>Einfach und  unkompliziert</p>",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "item_hydr3H",
+        "item_WHFPKt",
+        "item_YkqMbq",
+        "item_gQFYAb"
+      ],
+      "settings": {
+        "heading": "",
+        "heading_align": "text-start",
+        "icon_size": 24,
+        "title_type_scale": "small",
+        "text_type_scale": "extra_small",
+        "icon_position": "beside",
+        "mobile_stack": false,
+        "section_height": "medium",
+        "color_scheme": "1",
+        "full_width": true,
+        "dividers": "none",
+        "prevent_animation": false
+      }
+    },
+    "form": {
+      "type": "contact-form",
+      "blocks": {
+        "dropdown_kn37CN": {
+          "type": "dropdown",
+          "settings": {
+            "title": "Anrede",
+            "options": "Keine Angabe\nHerr\nFrau\nDivers",
+            "half_width": false
+          }
+        },
+        "contact-name-2": {
+          "type": "name",
+          "settings": {
+            "required": true,
+            "half_width": true
+          }
+        },
+        "custom_DpFMk3": {
+          "type": "custom",
+          "settings": {
+            "title": "Nachname",
+            "type": "text",
+            "required": false,
+            "half_width": true
+          }
+        },
+        "contact-email-3": {
+          "type": "email",
+          "settings": {
+            "required": true,
+            "half_width": false
+          }
+        },
+        "custom_3NEAey": {
+          "type": "custom",
+          "settings": {
+            "title": "Kundennummer",
+            "type": "text",
+            "required": false,
+            "half_width": false
+          }
+        },
+        "custom_YUHLRD": {
+          "type": "custom",
+          "settings": {
+            "title": "Bestell-Nr",
+            "type": "text",
+            "required": false,
+            "half_width": false
+          }
+        },
+        "custom_ChX8Lp": {
+          "type": "custom",
+          "settings": {
+            "title": "Betreff",
+            "type": "text",
+            "required": true,
+            "half_width": false
+          }
+        },
+        "custom_KkiwKe": {
+          "type": "custom",
+          "settings": {
+            "title": "Nachricht",
+            "type": "textarea",
+            "required": true,
+            "half_width": false
+          }
+        },
+        "text_7U99hV": {
+          "type": "text",
+          "settings": {
+            "text": "<p><a href=\"/policies/privacy-policy\" title=\"Privacy Policy\">Datenschutzerklärung</a></p>",
+            "half_width": false
+          }
+        },
+        "checkbox_G8V3fH": {
+          "type": "checkbox",
+          "settings": {
+            "title": "Bitte beachte unsere Datenschutzerklärung.",
+            "value_no": "No",
+            "value_yes": "Yes",
+            "half_width": true,
+            "required": true
+          }
+        }
+      },
+      "block_order": [
+        "dropdown_kn37CN",
+        "contact-name-2",
+        "custom_DpFMk3",
+        "contact-email-3",
+        "custom_3NEAey",
+        "custom_YUHLRD",
+        "custom_ChX8Lp",
+        "custom_KkiwKe",
+        "text_7U99hV",
+        "checkbox_G8V3fH"
+      ],
+      "settings": {
+        "heading": "",
+        "heading_align": "text-center",
+        "image_position": "top",
+        "color_scheme": "none",
+        "full_width": false,
+        "button_style": "btn btn--primary"
+      }
+    },
+    "faq_KYHtBG": {
+      "type": "faq",
+      "blocks": {
+        "category_94JG7i": {
+          "type": "category",
+          "settings": {
+            "text": "Produktmangel"
+          }
+        },
+        "question_qaN6dK": {
+          "type": "question",
+          "settings": {
+            "icon": "none",
+            "heading": "Was tun bei Produktmangel?",
+            "text": "<p>Falls du einen Produktmangel feststellen solltest, bitten wir dich, uns zur schnelleren Bearbeitung deines Anliegens ein Foto des betroffenen Produkts per E-Mail zu senden. Bitte richte deine E-Mail mit dem Foto und einer kurzen Beschreibung des Mangels an <a>info@coolgadget.de</a>. </p><p>Wir bemühen uns, dein Anliegen so schnell wie möglich zu bearbeiten und eine zufriedenstellende Lösung für dich zu finden.</p>"
+          }
+        },
+        "question_bWrUDR": {
+          "type": "question",
+          "settings": {
+            "icon": "none",
+            "heading": "Produktunstimmigkeit",
+            "text": "<p>Solltest du eine Produktunstimmigkeit feststellen, empfehlen wir dir zunächst, die Produktbezeichnung auf dem Etikett des Artikels sorgfältig zu überprüfen. Es ist auch hilfreich, die Modellbezeichnung deines Geräts zu kennen. Diese findest du in der Regel in den Einstellungen deines Geräts. </p><p><br/>Dieser Prozess hilft uns, dein Anliegen effizienter zu bearbeiten und sicherzustellen, dass wir die bestmögliche Lösung für dich finden. Wir schätzen deine Mithilfe und Geduld sehr.</p>"
+          }
+        },
+        "category_bin6zz": {
+          "type": "category",
+          "settings": {
+            "text": "Rücksendeverfahren & Lieferstatus"
+          }
+        },
+        "question_cTKmry": {
+          "type": "question",
+          "settings": {
+            "icon": "none",
+            "heading": "Wie sende ich Ware zurück?",
+            "text": "<p>Für detaillierte Informationen zur Rücksendeabwicklung laden wir dich herzlich ein, unseren Abschnitt „Rechtliches“ und dort den Unterabschnitt „Widerruf“ auf unserer Webseite zu besuchen. </p><p>Dort findest du alle notwendigen Schritte und Richtlinien, die dir den Rücksendeprozess so einfach und unkompliziert wie möglich gestalten sollen.</p>"
+          }
+        },
+        "question_HPKQbd": {
+          "type": "question",
+          "settings": {
+            "icon": "none",
+            "heading": "Ware ist nicht angekommen?",
+            "text": "<p>Bitte nehme dir einen Moment Zeit, deine Lieferadresse in deinen Unterlagen noch einmal zu überprüfen, um sicherzustellen, dass alle Angaben korrekt sind. </p><p>Wir empfehlen dir, bis zu 7 Werktage nach dem Versanddatum zu warten, da es gelegentlich zu kleinen Verzögerungen im Zustellungsprozess kommen kann. Wir danken dir für deine Geduld und dein Verständnis.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "category_94JG7i",
+        "question_qaN6dK",
+        "question_bWrUDR",
+        "category_bin6zz",
+        "question_cTKmry",
+        "question_HPKQbd"
+      ],
+      "settings": {
+        "heading": "Häufig gestellte Fragen",
+        "heading_align": "text-center",
+        "color_scheme": "none",
+        "full_width": true
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "blocks": {
+        "newsletter-heading-0": {
+          "type": "heading",
+          "settings": {
+            "heading": "Newsletter",
+            "heading_size": "h5"
+          }
+        },
+        "newsletter-text-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Abonniere jetzt unseren Newsletter, um nie wieder exklusive Aktionen oder Rabatte zu verpassen!</p>",
+            "enlarge_text": false
+          }
+        },
+        "newsletter-form-2": {
+          "type": "form",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "newsletter-heading-0",
+        "newsletter-text-1",
+        "newsletter-form-2"
+      ],
+      "disabled": true,
+      "settings": {
+        "overlay_position": "justify-center",
+        "text_align": "text-center",
+        "color_scheme": "default",
+        "full_width": true,
+        "transparent_content_color": "#ffffff",
+        "tint_color": "#000000",
+        "tint_opacity": 20
+      }
+    }
+  },
+  "order": [
+    "main",
+    "image-banner",
+    "icons_with_text_TrwWDW",
+    "form",
+    "faq_KYHtBG",
+    "newsletter"
+  ]
+}

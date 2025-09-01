@@ -1,0 +1,193 @@
+{% comment %}
+  Custom Navigation Panel – nur das Navigationspanel, keine Slides.
+{% endcomment %}
+
+{%- comment -%} Basis-CSS laden {%- endcomment -%}
+{{ 'text-overlay.css'   | asset_url | stylesheet_tag }}
+{{ 'quick-nav.css'      | asset_url | stylesheet_tag }}
+{{ 'quick-nav-large.css'| asset_url | stylesheet_tag }}
+{{ 'custom-select.css'  | asset_url | stylesheet_tag }}
+
+{%- comment -%} Horizontale Overrides zuletzt {%- endcomment -%}
+{{ 'horizontalmenu.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'quick-nav.js' | asset_url }}" defer></script>
+<script src="{{ 'custom-select.js' | asset_url }}" defer></script>
+
+{%- if section.settings.quick_nav_show_price -%}
+  <link rel="stylesheet" href="{{ 'quick-nav-price.css' | asset_url }}" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="{{ 'price-range.css' | asset_url }}" media="print" onload="this.media='all'">
+  <script src="{{ 'price-range.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+<div class="container container--quick-nav">
+  <div class="quick-nav-right">
+    {%- liquid
+      if section.settings.menu_1_display contains "small"
+        assign menu_1_boxed = false
+      else
+        assign menu_1_boxed = true
+      endif
+      assign menu_1_display = section.settings.menu_1_display | replace: "small_", "" | replace: "large_", ""
+
+      if section.settings.menu_2_display contains "small"
+        assign menu_2_boxed = false
+      else
+        assign menu_2_boxed = true
+      endif
+      assign menu_2_display = section.settings.menu_2_display | replace: "small_", "" | replace: "large_", ""
+
+      if section.settings.menu_3_display contains "small"
+        assign menu_3_boxed = false
+      else
+        assign menu_3_boxed = true
+      endif
+      assign menu_3_display = section.settings.menu_3_display | replace: "small_", "" | replace: "large_", ""
+
+      if settings.animations_enabled != "disabled" and section.settings.prevent_animation == false
+        assign animate = true
+      else
+        assign animate = false
+      endif
+    -%}
+    {% render 'quick-nav',
+      component_id: section.id,
+      menu: section.settings.quick_nav_menu,
+      image_ratio: section.settings.quick_nav_image_ratio,
+      image_fit: section.settings.quick_nav_image_fit,
+      use_product_image: section.settings.quick_nav_use_product_image,
+      color_scheme: section.settings.quick_nav_color_scheme,
+      show_price: section.settings.quick_nav_show_price,
+      animate: animate,
+      title: section.settings.quick_nav_title,
+      menu_1_display: menu_1_display,
+      menu_1_boxed: menu_1_boxed,
+      menu_1_text: section.settings.menu_1_text,
+      menu_2_display: menu_2_display,
+      menu_2_boxed: menu_2_boxed,
+      menu_2_text: section.settings.menu_2_text,
+      menu_3_display: menu_3_display,
+      menu_3_boxed: menu_3_boxed,
+      menu_3_text: section.settings.menu_3_text
+    %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Custom Navigation Panel",
+  "tag": "section",
+  "class": "cc-custom-navigation-panel",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Navigation panel settings"
+    },
+    {
+      "type": "link_list",
+      "id": "quick_nav_menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "quick_nav_title",
+      "label": "Heading",
+      "default": "Navigation options"
+    },
+    {
+      "type": "select",
+      "id": "quick_nav_image_ratio",
+      "label": "Image aspect ratio",
+      "options": [
+        { "value": "1.77", "label": "Landscape" },
+        { "value": "1", "label": "Square" },
+        { "value": "0.75", "label": "Portrait" }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "select",
+      "id": "quick_nav_image_fit",
+      "label": "Image fit",
+      "options": [
+        { "value": "contain", "label": "Natural" },
+        { "value": "cover", "label": "Cover" }
+      ],
+      "default": "contain"
+    },
+    {
+      "type": "checkbox",
+      "id": "quick_nav_use_product_image",
+      "label": "Use the first product image for collection images",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "quick_nav_color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "none", "label": "Default" },
+        { "value": "default", "label": "Content panel" },
+        { "value": "1", "label": "Scheme 1" },
+        { "value": "2", "label": "Scheme 2" },
+        { "value": "3", "label": "Scheme 3" }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "checkbox",
+      "id": "quick_nav_show_price",
+      "label": "Show price slider when available",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Menu 1"
+    },
+    { "type": "text", "id": "menu_1_text", "label": "Placeholder text", "default": "Level 1 Navigation" },
+    { "type": "select", "id": "menu_1_display", "label": "Display style", "default": "large_text",
+      "options": [
+        { "value": "small_text", "label": "Small - Text" },
+        { "value": "small_image_text", "label": "Small - Image and text" },
+        { "value": "large_text", "label": "Large - Text" },
+        { "value": "large_image", "label": "Large - Image" },
+        { "value": "large_image_text", "label": "Large - Image and text" }
+      ]
+    },
+    {
+      "type": "header", "content": "Menu 2"
+    },
+    { "type": "text", "id": "menu_2_text", "label": "Level 2 Navigation", "default": "Navigation options" },
+    { "type": "select", "id": "menu_2_display", "label": "Display style", "default": "large_text",
+      "options": [
+        { "value": "small_text", "label": "Small - Text" },
+        { "value": "small_image_text", "label": "Small - Image and text" },
+        { "value": "large_text", "label": "Large - Text" },
+        { "value": "large_image", "label": "Large - Image" },
+        { "value": "large_image_text", "label": "Large - Image and text" }
+      ]
+    },
+    {
+      "type": "header", "content": "Menu 3"
+    },
+    { "type": "text", "id": "menu_3_text", "label": "Level 3 Navigation", "default": "Choose an option" },
+    { "type": "select", "id": "menu_3_display", "label": "Display style", "default": "large_text",
+      "options": [
+        { "value": "small_text", "label": "Small - Text" },
+        { "value": "small_image_text", "label": "Small - Image and text" },
+        { "value": "large_text", "label": "Large - Text" },
+        { "value": "large_image", "label": "Large - Image" },
+        { "value": "large_image_text", "label": "Large - Image and text" }
+      ]
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "Custom Navigation Panel",
+      "blocks": []
+    }
+  ]
+}
+{% endschema %}

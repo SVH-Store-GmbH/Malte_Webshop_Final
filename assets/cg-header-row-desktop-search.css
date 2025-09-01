@@ -1,0 +1,106 @@
+:root {
+  /* Breite der Suchleiste im Desktop‑Header. Kann bei Bedarf angepasst werden. */
+  --cg-search-width: min(480px, 60vw);
+}
+
+/*
+  Die nachfolgenden Regeln integrieren die standardisierte Suchleiste aus dem Theme
+  direkt in den neuen Desktop‑Header. Die mobile Ansicht bleibt unverändert.
+  Die Suche erscheint in der Mitte des Headers, nimmt eine definierte Breite ein
+  und lässt sich über die vorhandene Such‑Icon‑Schaltfläche ein‑ und ausblenden.
+*/
+@media (min-width: 768px) {
+  /*
+    Positionierung und Skalierung der Suchleiste für Desktop.
+    Die Suchleiste wird aus dem Flex‑Flow des Headers herausgenommen und absolut
+    positioniert, so dass sie direkt neben dem Icon‑Cluster erscheint. Sie erhält
+    eine feste Breite (--cg-search-width) und eine Höhe proportional zur Header‑Höhe.
+
+    Um die Standard‑Suchlogik des Themes nicht zu stören, arbeiten wir mit den
+    vorhandenen Klassen `.header__search--collapsible-desktop` und `.js-search-bar`.
+    Beide Varianten werden angesprochen, falls die Minimierungs‑Option
+    abgeschaltet ist und das Theme nur die `js-search-bar` Klasse setzt.
+    Die Sichtbarkeit wird über die Klassen `search-is-visible` und
+    `search-is-collapsed` am <store-header> Element gesteuert (siehe main.js).
+  */
+  store-header.header .header__search--collapsible-desktop,
+  store-header.header .js-search-bar {
+    flex: none !important;
+    position: absolute;
+    top: 50%;
+    /* Setze die Leiste knapp links vom Icon‑Cluster, inklusive eines kleinen Abstands */
+    right: calc(var(--cg-pad-right) + clamp(4px, 1vw, 12px));
+    transform: translateY(-50%) translateX(100%);
+    width: var(--cg-search-width);
+    max-width: var(--cg-search-width);
+    /* Die Höhe der Leiste hängt von der Header‑Höhe ab */
+    height: calc(var(--cg-header-h) * 0.75);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+    z-index: 1000;
+  }
+
+  /*
+    Suchleiste einblenden: Wenn der Header die Klasse `search-is-visible` hat,
+    wird die Suchleiste sichtbar und auf ihre Zielposition geschoben (translateX(0)).
+  */
+  store-header.header.search-is-visible .header__search--collapsible-desktop,
+  store-header.header.search-is-visible .js-search-bar {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(-50%) translateX(0);
+  }
+
+  /*
+    Suchleiste ausblenden: Bei `search-is-collapsed` wird die Leiste nach rechts
+    verschoben (translateX(100%)) und unsichtbar.
+  */
+  store-header.header.search-is-collapsed .header__search--collapsible-desktop,
+  store-header.header.search-is-collapsed .js-search-bar {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-50%) translateX(100%);
+  }
+
+  /*
+    Inhalt der Suchleiste: das Formular hat volle Breite und Höhe der Leiste.
+    Wir halten die Eingabezeile und Buttons flexibel, so dass sie sich der
+    verfügbaren Höhe anpassen.
+  */
+  store-header.header .header__search--collapsible-desktop .search,
+  store-header.header .js-search-bar .search {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 0 0.5rem;
+    gap: 0.5rem;
+    background: var(--theme-bg, #fff);
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  store-header.header .header__search--collapsible-desktop .search__input,
+  store-header.header .js-search-bar .search__input {
+    flex: 1 1 auto;
+    height: 100%;
+    font-size: 0.875rem;
+  }
+
+  store-header.header .header__search--collapsible-desktop .search__submit,
+  store-header.header .header__search--collapsible-desktop .search__reset,
+  store-header.header .header__search--collapsible-desktop .search__speech,
+  store-header.header .js-search-bar .search__submit,
+  store-header.header .js-search-bar .search__reset,
+  store-header.header .js-search-bar .search__speech {
+    width: calc(var(--cg-header-h) * 0.75);
+    height: calc(var(--cg-header-h) * 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

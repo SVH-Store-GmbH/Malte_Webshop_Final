@@ -1,0 +1,8 @@
+.product-specs .spec-item {
+  margin-bottom: 200px; /* Abstand zwischen den Bulletpoints, beliebig anpassen */
+}
+
+/* Optional: Den letzten Abstand entfernen, damit unten nicht mehr Platz entsteht */
+.product-specs .spec-item:last-child {
+  margin-bottom: 0;
+}

@@ -1,0 +1,96 @@
+{% comment %}
+  Progressiver Filter für Metafelder:
+  - Zuerst alle Hersteller (custom.marke) ermitteln.
+  - Bei Auswahl eines Herstellers: nur passende Serien (custom.serie) anzeigen.
+  - Bei Auswahl einer Serie: nur passende Modelle (custom.modell) anzeigen.
+  Die Filter-Links übergeben die ausgewählten Werte via Query-Parameter.
+{% endcomment %}
+
+{%- assign selected_marke = request.params.custom_marke | default: "" -%}
+{%- assign selected_serie = request.params.custom_serie | default: "" -%}
+
+{%- assign available_marken = "" | split: "," -%}
+{%- assign available_serien = "" | split: "," -%}
+{%- assign available_modelle = "" | split: "," -%}
+
+{%- comment -%}
+  Alle Hersteller (custom.marke) aus der aktuellen Collection ermitteln
+{%- endcomment -%}
+{%- for product in collection.products -%}
+  {%- if product.metafields.custom.marke and product.metafields.custom.marke.value != blank -%}
+    {%- assign marke = product.metafields.custom.marke.value | strip -%}
+    {%- unless available_marken contains marke -%}
+      {%- assign available_marken = available_marken | push: marke -%}
+    {%- endunless -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<!-- Hersteller Filter -->
+<div class="filter-group filter-marke">
+  <h3>Hersteller</h3>
+  <ul>
+    {%- for marke in available_marken -%}
+      <li>
+        <a href="?custom_marke={{ marke | url_encode }}">
+          {{ marke }}
+        </a>
+      </li>
+    {%- endfor -%}
+  </ul>
+</div>
+
+{%- if selected_marke != "" -%}
+  {%- comment -%}
+    Alle Serien (custom.serie) ermitteln, die zu dem ausgewählten Hersteller passen
+  {%- endcomment -%}
+  {%- for product in collection.products -%}
+    {%- if product.metafields.custom.marke and product.metafields.custom.marke.value == selected_marke and product.metafields.custom.serie and product.metafields.custom.serie.value != blank -%}
+      {%- assign serie = product.metafields.custom.serie.value | strip -%}
+      {%- unless available_serien contains serie -%}
+        {%- assign available_serien = available_serien | push: serie -%}
+      {%- endunless -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  <!-- Serien Filter -->
+  <div class="filter-group filter-serie">
+    <h3>Serie</h3>
+    <ul>
+      {%- for serie in available_serien -%}
+        <li>
+          <a href="?custom_marke={{ selected_marke | url_encode }}&custom_serie={{ serie | url_encode }}">
+            {{ serie }}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{% endif %}
+
+{%- if selected_marke != "" and selected_serie != "" -%}
+  {%- comment -%}
+    Alle Modelle (custom.modell) ermitteln, die zum ausgewählten Hersteller und zur Serie passen
+  {%- endcomment -%}
+  {%- for product in collection.products -%}
+    {%- if product.metafields.custom.marke and product.metafields.custom.marke.value == selected_marke and product.metafields.custom.serie and product.metafields.custom.serie.value == selected_serie and product.metafields.custom.modell and product.metafields.custom.modell.value != blank -%}
+      {%- assign modell = product.metafields.custom.modell.value | strip -%}
+      {%- unless available_modelle contains modell -%}
+        {%- assign available_modelle = available_modelle | push: modell -%}
+      {%- endunless -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  <!-- Modell Filter -->
+  <div class="filter-group filter-modell">
+    <h3>Modell</h3>
+    <ul>
+      {%- for modell in available_modelle -%}
+        <li>
+          <a href="?custom_marke={{ selected_marke | url_encode }}&custom_serie={{ selected_serie | url_encode }}&custom_modell={{ modell | url_encode }}">
+            {{ modell }}
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{% endif %}

@@ -1,0 +1,109 @@
+<style>
+.video-banner-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1920px;
+  height: auto;
+  overflow: hidden;
+  font-family: 'Anton', sans-serif;
+}
+
+.video-banner-wrapper video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.banner-text {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  color: #000;
+  opacity: 0;
+  transition: opacity 1s ease;
+  padding: 0 20px;
+  line-height: 1.2;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.banner-text.visible {
+  opacity: 1;
+}
+
+.block1 {
+  top: 15%;
+  font-size: 48px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.block2 {
+  top: 50%;
+  font-size: 32px;
+}
+
+.block2 .huellen {
+  font-size: 64px;
+  font-weight: 900;
+}
+
+.block2 .subline {
+  font-size: 20px;
+  font-weight: 500;
+  margin-top: 5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.orange {
+  color: #F19222;
+}
+
+.black {
+  color: #000000;
+}
+</style>
+
+<div class="video-banner-wrapper">
+  <video id="bgVideo" autoplay muted playsinline>
+    <source src="https://cdn.shopify.com/videos/c/o/v/9c029aee47424cb6a966dfe4a2ed59f2.mp4" type="video/mp4">
+  </video>
+
+  <!-- Erster Textblock -->
+  <div id="textBlock1" class="banner-text block1">
+    <span class="black">NEUE</span> <span class="orange">WEBSITE</span>, 
+    <span class="black">NEUES</span> <span class="orange">SHOPPING-ERLEBNIS</span>
+  </div>
+
+  <!-- Zweiter Textblock -->
+  <div id="textBlock2" class="banner-text block2">
+    <div class="huellen"><strong>10% AUF ALLE HÜLLEN!</strong></div>
+    <div class="subline">MACH DEIN SMARTPHONE ZUM HINGUCKER UND SPARE BEI UNSEREM RELAUNCH</div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const video = document.getElementById("bgVideo");
+    const text1 = document.getElementById("textBlock1");
+    const text2 = document.getElementById("textBlock2");
+
+    video.addEventListener("timeupdate", function () {
+      const t = video.currentTime;
+
+      // Erster Text (ab 2s bis 6s)
+      if (t >= 2 && t <= 6) {
+        text1.classList.add("visible");
+      } else {
+        text1.classList.remove("visible");
+      }
+
+      // Zweiter Text (ab 6s bis 14s)
+      if (t >= 6 && t <= 14) {
+        text2.classList.add("visible");
+      } else {
+        text2.classList.remove("visible");
+      }
+    });
+  });
+</script>

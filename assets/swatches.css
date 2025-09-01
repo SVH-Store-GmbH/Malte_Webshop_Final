@@ -1,0 +1,4 @@
+@charset "UTF-8";
+
+[data-swatch="blau"] { --swatch-color: #0000FF}[data-swatch="braun"] { --swatch-color: #8B4513}[data-swatch="gelb"] { --swatch-color: #FFFF00}[data-swatch="gold"] { --swatch-color: #FFD700}[data-swatch="grün"] { --swatch-color: #008000}[data-swatch="lila"] { --swatch-color: #800080}[data-swatch="pink"] { --swatch-color: #FFC0CB}[data-swatch="rosa"] { --swatch-color: #FFB6C1}[data-swatch="rosegold"] { --swatch-color: #B76E79}[data-swatch="rot"] { --swatch-color: #FF0000}[data-swatch="schwarz"] { --swatch-color: #000000}[data-swatch="silber"] { --swatch-color: #C0C0C0}[data-swatch="violett"] { --swatch-color: #8A2BE2}
+

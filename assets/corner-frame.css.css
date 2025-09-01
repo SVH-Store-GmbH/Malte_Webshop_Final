@@ -1,0 +1,62 @@
+.gallery-block__image {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Alle vier Ecken */
+.corner-top-left::before,
+.corner-top-right::before,
+.corner-bottom-left::before,
+.corner-bottom-right::before,
+.corner-top-left::after,
+.corner-top-right::after,
+.corner-bottom-left::after,
+.corner-bottom-right::after {
+  content: "";
+  position: absolute;
+  background: #6e6e6e;
+  z-index: 5;
+}
+
+/* Waagerechte Linien */
+.corner-top-left::before,
+.corner-top-right::before,
+.corner-bottom-left::before,
+.corner-bottom-right::before {
+  width: 20px;
+  height: 2px;
+}
+
+/* Senkrechte Linien */
+.corner-top-left::after,
+.corner-top-right::after,
+.corner-bottom-left::after,
+.corner-bottom-right::after {
+  width: 2px;
+  height: 20px;
+}
+
+/* Positionen */
+.corner-top-left::before,
+.corner-top-left::after {
+  top: 0;
+  left: 0;
+}
+
+.corner-top-right::before,
+.corner-top-right::after {
+  top: 0;
+  right: 0;
+}
+
+.corner-bottom-left::before,
+.corner-bottom-left::after {
+  bottom: 0;
+  left: 0;
+}
+
+.corner-bottom-right::before,
+.corner-bottom-right::after {
+  bottom: 0;
+  right: 0;
+}

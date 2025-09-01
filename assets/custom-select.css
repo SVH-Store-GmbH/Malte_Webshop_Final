@@ -1,0 +1,14 @@
+/* assets/custom-select.css */
+
+.custom-select-button {
+  --custom-select-button-width: 52px; /* Doppelt so breite Buttons */
+}
+
+/* Optional: Weitere Anpassungen für das Aussehen der Buttons */
+.custom-select-button {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  margin-left: 10px;
+}

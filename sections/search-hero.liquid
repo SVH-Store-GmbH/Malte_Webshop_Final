@@ -1,0 +1,75 @@
+{% comment %}
+Search hero for the /search template
+Top: general search at the top
+Below: 3-step finder using existing quick-nav snippet
+{% endcomment %}
+
+<section class="search-hero{% if section.settings.full_width == false %} page-width{% endif %}">
+  <div class="search-hero__card">
+
+    <!-- Top: Search bar -->
+    <form class="search-hero__form" action="{{ routes.search_url }}" method="get" role="search">
+      <div class="search-hero__input-wrapper">
+        <input 
+          class="search-hero__input" 
+          type="search" 
+          name="q" 
+          value="{{ search.terms | escape }}" 
+          placeholder="{{ section.settings.placeholder | default: 'Suche nach Produkten…' }}" 
+          autocomplete="off">
+        <button class="search-hero__submit" type="submit">
+          {{ section.settings.button_label | default: 'Suchen' }}
+        </button>
+      </div>
+    </form>
+
+    {% if section.settings.popular_links != blank %}
+      <div class="search-hero__popular">
+        <span>Beliebt:</span>
+        {{ section.settings.popular_links }}
+      </div>
+    {% endif %}
+
+    <hr class="search-hero__divider">
+
+    <!-- Bottom: 3-Step Finder -->
+    <div class="search-hero__finder">
+      {% render 'quick-nav', 
+        color_scheme: 'default',
+        boxed_options: true,
+        menu_1: section.settings.menu_1,
+        menu_2: section.settings.menu_2,
+        menu_3: section.settings.menu_3,
+        menu_1_text: section.settings.menu_1_text,
+        menu_2_text: section.settings.menu_2_text,
+        menu_3_text: section.settings.menu_3_text,
+        place_price: false,
+        wide: true
+      %}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Search Hero",
+  "templates": ["search"],
+  "settings": [
+    { "type": "checkbox", "id": "full_width", "label": "Volle Breite", "default": false },
+    { "type": "text", "id": "placeholder", "label": "Platzhalter Suchfeld", "default": "Suche nach Produkten…" },
+    { "type": "text", "id": "button_label", "label": "Button-Text", "default": "Suchen" },
+    { "type": "richtext", "id": "popular_links", "label": "Beliebte Suchen (Richtext/Links)", "default": "<p></p>" },
+
+    { "type": "link_list", "id": "menu_1", "label": "Level 1 Navigation (Hersteller)" },
+    { "type": "link_list", "id": "menu_2", "label": "Level 2 Navigation (Serie)" },
+    { "type": "link_list", "id": "menu_3", "label": "Level 3 Navigation (Modell)" },
+    { "type": "text", "id": "menu_1_text", "label": "Placeholder Level 1", "default": "1. Hersteller" },
+    { "type": "text", "id": "menu_2_text", "label": "Placeholder Level 2", "default": "2. Serie" },
+    { "type": "text", "id": "menu_3_text", "label": "Placeholder Level 3", "default": "3. Modell" }
+  ],
+  "presets": [
+    { "name": "Search Hero" }
+  ]
+}
+{% endschema %}

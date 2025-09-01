@@ -1,0 +1,43 @@
+.custom-navigation-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 20px 0;
+  width: 100%;
+}
+
+.custom-navigation-left {
+  flex: 1;
+  padding-left: 20px;
+}
+
+.custom-navigation-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 20px;
+}
+
+/* Gemeinsame Einstellungen für die Texte */
+.slide-text {
+  font-size: 4rem; /* Passe die Schriftgröße nach Bedarf an */
+  margin: 0;
+  opacity: 0;
+  transform: translateX(-100%);
+  animation: slideIn 1s forwards;
+}
+
+/* Verzögerung für den zweiten Text */
+.slide-text-2 {
+  animation-delay: 0.5s;
+}
+
+/* Keyframes für den Slide-in Effekt */
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

@@ -1,0 +1,12 @@
+{% # theme-check-disable UnknownFilter %}
+{%- comment -%}
+  Parameters:
+  - product {Object} - Product object.
+
+  Usage:
+  {% render 'structured-data-product', product: product %}
+  {%- endcomment -%}
+
+<script type="application/ld+json">
+  {{ product | structured_data }}
+</script>
