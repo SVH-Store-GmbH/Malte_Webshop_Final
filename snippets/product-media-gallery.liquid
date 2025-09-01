@@ -1,0 +1,67 @@
+{% comment %}Simplified product media gallery{% endcomment %}
+{% assign gallery_id = 'product-gallery-' | append: product.id %}
+<product-media-gallery id="{{ gallery_id }}" class="product-gallery" data-product-id="{{ product.id }}">
+  <div class="product-gallery__main">
+    {% for media in product.media %}
+      {%- assign ratio = media.preview_image.aspect_ratio | default: 1 -%}
+      <div class="product-gallery__slide is-loading" data-media-id="{{ media.id }}" style="--ratio:{{ ratio }}">
+        {% case media.media_type %}
+          {% when 'image' %}
+            <img
+              src="{{ media | image_url: width: 1500 }}"
+              srcset="{{ media | image_url: width: 400 }} 400w, {{ media | image_url: width: 800 }} 800w, {{ media | image_url: width: 1200 }} 1200w, {{ media | image_url: width: 1500 }} 1500w"
+              sizes="(min-width: 768px) 80vw, 100vw"
+              width="{{ media.preview_image.width }}"
+              height="{{ media.preview_image.height }}"
+              alt="{{ media.alt | escape | default: product.title }}"
+              {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
+              class="product-gallery__image" />
+          {% when 'video' %}
+            <deferred-media class="product-gallery__deferred" data-media-id="{{ media.id }}">
+              <button class="product-gallery__poster" type="button">
+                <img src="{{ media.preview_image | image_url: width: 800 }}" alt="{{ media.alt | escape | default: product.title }}" />
+              </button>
+              <template>
+                {{ media | video_tag: controls: true }}
+              </template>
+            </deferred-media>
+          {% when 'external_video' %}
+            <deferred-media class="product-gallery__deferred" data-media-id="{{ media.id }}">
+              <button class="product-gallery__poster" type="button">
+                <img src="{{ media.preview_image | image_url: width: 800 }}" alt="{{ media.alt | escape | default: product.title }}" />
+              </button>
+              <template>
+                {{ media | external_video_tag }}
+              </template>
+            </deferred-media>
+          {% when 'model' %}
+            <deferred-media class="product-gallery__deferred" data-media-id="{{ media.id }}">
+              <button class="product-gallery__poster" type="button">
+                <img src="{{ media.preview_image | image_url: width: 800 }}" alt="{{ media.alt | escape | default: product.title }}" />
+              </button>
+              <template>
+                {{ media | model_viewer_tag }}
+              </template>
+            </deferred-media>
+        {% endcase %}
+      </div>
+    {% endfor %}
+  </div>
+  {% if show_thumbs %}
+  <div class="product-gallery__thumbs">
+    {% for media in product.media %}
+      <button class="product-gallery__thumb" data-media-id="{{ media.id }}" aria-label="{{ 'products.product.media.thumbnail' | t }} {{ forloop.index }}">
+        {% if media.media_type == 'video' or media.media_type == 'external_video' or media.media_type == 'model' %}
+          {{ media.preview_image | image_url: width: 100 | image_tag: width: 100, height: 100, alt: media.alt | escape }}
+        {% else %}
+          {{ media | image_url: width: 100 | image_tag: width: 100, height: 100, alt: media.alt | escape }}
+        {% endif %}
+      </button>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <dialog class="product-gallery__lightbox" aria-label="{{ product.title }}">
+    <button type="button" class="product-gallery__lightbox-close" aria-label="{{ 'accessibility.close' | t }}">&times;</button>
+    <div class="product-gallery__lightbox-body"></div>
+  </dialog>
+</product-media-gallery>
