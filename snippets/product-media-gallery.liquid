@@ -1,0 +1,74 @@
+{% comment %}
+  Product media gallery component
+  Supports images, videos, external videos, and 3D models
+{% endcomment %}
+
+{%- liquid
+  assign enable_zoom = enable_zoom | default: false
+  assign show_thumbs = show_thumbs | default: true
+-%}
+
+{%- assign first_media = product.media | first -%}
+<div class="product-gallery" data-product-gallery>
+  <div class="product-gallery__viewer" aria-live="polite">
+    {%- for media in product.media -%}
+      <div class="product-gallery__media" id="Media-{{ media.id }}" data-media-id="{{ media.id }}">
+        {%- case media.media_type -%}
+          {%- when 'image' -%}
+            {%- assign src = media | image_url: width: 1440 -%}
+            <img
+              src="{{ src }}"
+              srcset="{{ media | image_srcset }}"
+              sizes="(min-width: 1024px) 800px, 100vw"
+              width="{{ media.width }}"
+              height="{{ media.height }}"
+              alt="{{ media.alt | escape | default: product.title | escape }}"
+              {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %}
+              class="product-gallery__img"
+            >
+          {%- when 'video' -%}
+            <deferred-media class="deferred-media" data-media-id="{{ media.id }}">
+              <template>
+                {{ media | media_tag: image_size: '1440x' }}
+              </template>
+              <button class="deferred-media__poster" type="button">
+                {{ media.preview_image | image_url: width: 1440 | image_tag: width: media.preview_image.width, height: media.preview_image.height, loading: 'lazy', alt: media.alt | escape | default: product.title | escape }}
+              </button>
+            </deferred-media>
+          {%- when 'external_video' -%}
+            <deferred-media class="deferred-media" data-media-id="{{ media.id }}">
+              <template>
+                {{ media | external_video_tag }}
+              </template>
+              <button class="deferred-media__poster" type="button">
+                {{ media.preview_image | image_url: width: 1440 | image_tag: width: media.preview_image.width, height: media.preview_image.height, loading: 'lazy', alt: media.alt | escape | default: product.title | escape }}
+              </button>
+            </deferred-media>
+          {%- when 'model' -%}
+            <deferred-media class="deferred-media" data-media-id="{{ media.id }}">
+              <template>
+                {{ media | model_viewer_tag: image_size: '1440x', reveal: 'interaction', toggleable: true }}
+              </template>
+              <button class="deferred-media__poster" type="button">
+                {{ media.preview_image | image_url: width: 1440 | image_tag: width: media.preview_image.width, height: media.preview_image.height, loading: 'lazy', alt: media.alt | escape | default: product.title | escape }}
+              </button>
+            </deferred-media>
+        {%- endcase -%}
+      </div>
+    {%- endfor -%}
+  </div>
+
+  {%- if show_thumbs -%}
+    <div class="product-gallery__thumbs" aria-label="{{ 'products.product.media' | t }}">
+      {%- for media in product.media -%}
+        <button class="product-gallery__thumb" data-media-id="{{ media.id }}" aria-controls="Media-{{ media.id }}" aria-label="{{ media.alt | escape | default: product.title | escape }}" {% if forloop.first %}aria-current="true"{% endif %}>
+          {{ media.preview_image | image_url: width: 200 | image_tag: width: media.preview_image.width, height: media.preview_image.height, loading: 'lazy', alt: '' }}
+        </button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  <dialog class="product-gallery__lightbox" aria-label="{{ product.title | escape }}">
+    <button type="button" class="product-gallery__lightbox-close" aria-label="{{ 'accessibility.close' | t }}">&times;</button>
+  </dialog>
+</div>
