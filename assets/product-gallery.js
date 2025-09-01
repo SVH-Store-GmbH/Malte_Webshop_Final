@@ -16,34 +16,17 @@ class ProductGallery {
     this.stage.addEventListener('click', () => this.openModal());
     this.stage.addEventListener('keydown', (e) => this.onKey(e));
     this.thumbs.forEach((btn, i) => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        this.show(i);
-      });
+      btn.addEventListener('click', () => this.show(i));
       btn.addEventListener('keydown', (e) => this.onKey(e));
     });
 
-    const variantInput = this.product ? this.product.querySelector('input[name="id"]') : null;
-    const initialVariantId = this.root.dataset.initialVariantId || (variantInput ? variantInput.value : null);
-    if (initialVariantId) this.filterByVariant(initialVariantId);
-
-    const onVariantChange = (e) => {
-      let id = null;
-      let featured = null;
-      if (e.detail && e.detail.variant) {
-        id = e.detail.variant.id;
-        featured = e.detail.variant.featured_media ? e.detail.variant.featured_media.id : null;
-      } else if (e.target && e.target.name === 'id') {
-        id = e.target.value;
-      }
-      if (id) this.filterByVariant(id, featured);
-    };
-
-    if (variantInput) variantInput.addEventListener('change', onVariantChange);
     if (this.product) {
-      ['variant:change', 'product:variant:change', 'on:variant:change'].forEach((evt) => {
-        this.product.addEventListener(evt, onVariantChange);
+      const variantInput = this.product.querySelector('input[name="id"]');
+      if (variantInput) this.filterByVariant(variantInput.value);
+      this.product.addEventListener('on:variant:change', (e) => {
+        if (e.detail && e.detail.variant) {
+          this.filterByVariant(e.detail.variant.id, e.detail.variant.featured_media?.id);
+        }
       });
     }
   }
@@ -83,7 +66,7 @@ class ProductGallery {
     this.items[this.activeIndex].setAttribute('aria-hidden', 'false');
     this.thumbs[this.activeIndex].classList.add('is-active');
     this.thumbs[this.activeIndex].setAttribute('aria-current', 'true');
-    this.thumbs[this.activeIndex].scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+    this.thumbs[this.activeIndex].scrollIntoView({ inline: 'center', behavior: 'smooth' });
   }
 
   buildModal() {
@@ -149,19 +132,17 @@ class ProductGallery {
   filterByVariant(variantId, featuredMediaId) {
     const idStr = variantId ? variantId.toString() : null;
     const featuredStr = featuredMediaId ? featuredMediaId.toString() : null;
-    let showIndex = null;
-    let firstVariantSpecific = null;
-    let firstShared = null;
+    let showIndex = 0;
 
     this.items = [];
     this.thumbs = [];
 
     this.allItems.forEach((item, index) => {
-      const ids = item.dataset.variantIds ? item.dataset.variantIds.split(',').filter(Boolean) : [];
+      const ids = item.dataset.variantIds ? item.dataset.variantIds.split(',') : [];
       const visible = !idStr || ids.length === 0 || ids.includes(idStr);
-      item.classList.toggle('is-hidden', !visible);
+      item.style.display = visible ? '' : 'none';
       const thumb = this.allThumbs[index];
-      thumb.classList.toggle('is-hidden', !visible);
+      thumb.style.display = visible ? '' : 'none';
       item.classList.remove('is-active');
       item.setAttribute('aria-hidden', 'true');
       thumb.classList.remove('is-active');
@@ -170,28 +151,13 @@ class ProductGallery {
       if (visible) {
         this.items.push(item);
         this.thumbs.push(thumb);
-        if (ids.length && firstVariantSpecific === null) {
-          firstVariantSpecific = this.items.length - 1;
-        }
-        if (!ids.length && firstShared === null) {
-          firstShared = this.items.length - 1;
-        }
         if (featuredStr && item.dataset.mediaId === featuredStr) {
           showIndex = this.items.length - 1;
         }
       }
     });
 
-    if (showIndex === null) {
-      if (firstVariantSpecific !== null) {
-        showIndex = firstVariantSpecific;
-      } else if (firstShared !== null) {
-        showIndex = firstShared;
-      } else {
-        showIndex = 0;
-      }
-    }
-
+    this.activeIndex = 0;
     if (this.items.length > 0) {
       this.show(showIndex);
     }
