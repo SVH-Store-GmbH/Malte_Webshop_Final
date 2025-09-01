@@ -1,27 +1,41 @@
-.product-gallery {
+.product-media-gallery {
   position: sticky;
-  top: 0;
+  top: var(--header-end, 0);
   align-self: flex-start;
+  margin-inline: auto;
+  width: min(100%, var(--gallery-max-w));
+  --thumbs-height: 80px;
+  --desktop-gallery-max-w: 600px;
+  --gallery-max-w: 100%;
+  --gallery-max-h: calc(100vh - var(--header-end, 0px) - var(--thumbs-height));
 }
-.product-gallery__main {
+
+.product-media-gallery .product-gallery__main {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  max-width: 100%;
+  max-height: var(--gallery-max-h);
+  overflow-y: auto;
 }
-.product-gallery__media {
+
+.product-media-gallery .product-gallery__media {
   display: none;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 4 / 5;
 }
-.product-gallery__media.is-active {
+
+.product-media-gallery .product-gallery__media.is-active {
   display: block;
 }
-.product-gallery__image {
+
+.product-media-gallery .product-gallery__image {
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
-.product-gallery__thumbs {
+
+.product-media-gallery .product-gallery__thumbs {
   margin-top: 1rem;
   display: flex;
   gap: 0.5rem;
@@ -29,7 +43,8 @@
   scroll-snap-type: x mandatory;
   justify-content: center;
 }
-.product-gallery__thumb {
+
+.product-media-gallery .product-gallery__thumb {
   flex: 0 0 auto;
   padding: 0;
   border: 2px solid transparent;
@@ -37,12 +52,30 @@
   background: none;
   scroll-snap-align: center;
 }
-.product-gallery__thumb.is-active {
+
+.product-media-gallery .product-gallery__thumb.is-active {
   border-color: #000;
 }
-.product-gallery__thumb-image {
+
+.product-media-gallery .product-gallery__thumb-image {
   width: 60px;
   height: 60px;
   object-fit: contain;
   border-radius: 4px;
+}
+
+@media (min-width: 750px) {
+  .product-media-gallery {
+    --gallery-max-w: 520px;
+  }
+}
+
+@media (min-width: 990px) {
+  .product-media-gallery {
+    --gallery-max-w: var(--desktop-gallery-max-w);
+  }
+  .product--medium .product-media-gallery,
+  .product--large .product-media-gallery {
+    width: min(100%, var(--gallery-max-w));
+  }
 }

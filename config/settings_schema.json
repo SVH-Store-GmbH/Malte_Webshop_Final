@@ -3060,5 +3060,20 @@
         "content": "For a full list of JavaScript events included with Enterprise, please refer to the /assets/custom.js file within the theme code, or read our [JavaScript Technical Guide](https://cleancanvas.co.uk/support/enterprise/technical-guides/js)."
       }
     ]
+  },
+  {
+    "name": "Product page",
+    "settings": [
+      {
+        "type": "range",
+        "id": "gallery_max_width",
+        "label": "Gallery max width (desktop)",
+        "min": 480,
+        "max": 720,
+        "step": 10,
+        "default": 600,
+        "unit": "px"
+      }
+    ]
   }
 ]
