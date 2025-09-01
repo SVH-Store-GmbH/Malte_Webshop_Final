@@ -117,7 +117,7 @@
         "media_ratio": "1",
         "media_crop": "center",
         "enable_video_looping": false,
-        "enable_zoom": false,
+        "enable_zoom": true,
         "zoom_mode": "click",
         "enable_lightbox_mobile": true,
         "hover_zoom": "large",
