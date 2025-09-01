@@ -112,7 +112,7 @@
         "sticky_atc_position": "end",
         "sticky_atc_mobile": true,
         "media_layout": "slider",
-        "media_size": "default",
+        "media_size": "large",
         "media_ratio": "natural",
         "media_crop": "none",
         "enable_video_looping": false,
