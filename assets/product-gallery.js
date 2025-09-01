@@ -7,133 +7,53 @@ class ProductGallery {
     this.prev = root.querySelector('.cg-gallery__arrow--prev');
     this.next = root.querySelector('.cg-gallery__arrow--next');
     this.activeIndex = 0;
-    this.visibleIndices = this.items.map((_, i) => i);
-    this.activeVisibleIndex = 0;
 
-    this.prev.addEventListener('click', () => this.showPrev());
-    this.next.addEventListener('click', () => this.showNext());
+    this.prev.addEventListener('click', () => this.show(this.activeIndex - 1));
+    this.next.addEventListener('click', () => this.show(this.activeIndex + 1));
     this.stage.addEventListener('click', () => this.openModal());
     this.stage.addEventListener('keydown', (e) => this.onKey(e));
     this.thumbs.forEach((btn, i) => {
       btn.addEventListener('click', () => this.show(i));
       btn.addEventListener('keydown', (e) => this.onKey(e));
     });
-
-    if (this.root.dataset.variantMedia !== undefined) {
-      const initialId = this.root.dataset.initialVariantId;
-      if (initialId) this.filterGalleryByVariant(initialId);
-      document.addEventListener('on:variant:change', (evt) => {
-        if (!this.root.closest('.js-product').contains(evt.target)) return;
-        const variant = evt.detail.variant;
-        if (variant?.id) {
-          this.filterGalleryByVariant(variant.id, variant.featured_media?.id);
-        }
-      });
-    }
-  }
-
-  showPrev() {
-    if (!this.visibleIndices.length) return;
-    const idx = (this.activeVisibleIndex - 1 + this.visibleIndices.length) % this.visibleIndices.length;
-    this.show(this.visibleIndices[idx]);
-  }
-
-  showNext() {
-    if (!this.visibleIndices.length) return;
-    const idx = (this.activeVisibleIndex + 1) % this.visibleIndices.length;
-    this.show(this.visibleIndices[idx]);
   }
 
   onKey(e) {
     switch (e.key) {
       case 'ArrowLeft':
         e.preventDefault();
-        this.showPrev();
+        this.show(this.activeIndex - 1);
         break;
       case 'ArrowRight':
         e.preventDefault();
-        this.showNext();
+        this.show(this.activeIndex + 1);
         break;
       case 'Home':
         e.preventDefault();
-        this.show(this.visibleIndices[0]);
+        this.show(0);
         break;
       case 'End':
         e.preventDefault();
-        this.show(this.visibleIndices[this.visibleIndices.length - 1]);
+        this.show(this.items.length - 1);
         break;
     }
   }
 
   show(i) {
-    if (!this.visibleIndices.length) return;
-    if (!this.visibleIndices.includes(i)) i = this.visibleIndices[0];
-
-    const prevIndex = this.activeIndex;
-
-    this.items[prevIndex].classList.remove('is-active');
-    this.items[prevIndex].setAttribute('aria-hidden', 'true');
-    this.thumbs[prevIndex].classList.remove('is-active');
-    this.thumbs[prevIndex].removeAttribute('aria-current');
-
-    this.items[i].classList.add('is-active');
-    this.items[i].setAttribute('aria-hidden', 'false');
-    this.thumbs[i].classList.add('is-active');
-    this.thumbs[i].setAttribute('aria-current', 'true');
-    this.thumbs[i].scrollIntoView({ inline: 'center', behavior: 'smooth' });
+    if (i < 0) i = this.items.length - 1;
+    if (i >= this.items.length) i = 0;
+    this.items[this.activeIndex].classList.remove('is-active');
+    this.items[this.activeIndex].setAttribute('aria-hidden', 'true');
+    this.thumbs[this.activeIndex].classList.remove('is-active');
+    this.thumbs[this.activeIndex].removeAttribute('aria-current');
 
     this.activeIndex = i;
-    this.activeVisibleIndex = this.visibleIndices.indexOf(i);
-  }
 
-  filterGalleryByVariant(variantId, featuredMediaId) {
-    const vid = String(variantId);
-    this.visibleIndices = [];
-    let firstVariantSpecific = null;
-    let firstShared = null;
-
-    this.items.forEach((item, index) => {
-      const ids = item.dataset.variantIds ? item.dataset.variantIds.split(',').filter(Boolean) : [];
-      const isShared = ids.length === 0;
-      const visible = isShared || ids.includes(vid);
-      item.classList.toggle('is-hidden', !visible);
-      this.thumbs[index].classList.toggle('is-hidden', !visible);
-      if (this.modalItems) {
-        this.modalItems[index].classList.toggle('is-hidden', !visible);
-      }
-      if (visible) {
-        this.visibleIndices.push(index);
-        if (!isShared && firstVariantSpecific === null) firstVariantSpecific = index;
-        if (isShared && firstShared === null) firstShared = index;
-      }
-    });
-
-    if (!this.visibleIndices.length) {
-      this.items[0].classList.remove('is-hidden');
-      this.thumbs[0].classList.remove('is-hidden');
-      if (this.modalItems) this.modalItems[0].classList.remove('is-hidden');
-      this.visibleIndices = [0];
-    }
-
-    let newIndex = this.activeIndex;
-    const prevActive = this.activeIndex;
-    if (!this.visibleIndices.includes(this.activeIndex)) {
-      if (featuredMediaId) {
-        const fIndex = this.items.findIndex(
-          (item) => item.dataset.mediaId === String(featuredMediaId) && !item.classList.contains('is-hidden')
-        );
-        if (fIndex !== -1) newIndex = fIndex;
-      }
-      if (!this.visibleIndices.includes(newIndex)) {
-        newIndex = firstVariantSpecific ?? firstShared ?? this.visibleIndices[0];
-      }
-      this.show(newIndex);
-      if (document.activeElement === this.items[prevActive] || document.activeElement === this.thumbs[prevActive]) {
-        this.stage.focus();
-      }
-    } else {
-      this.activeVisibleIndex = this.visibleIndices.indexOf(this.activeIndex);
-    }
+    this.items[this.activeIndex].classList.add('is-active');
+    this.items[this.activeIndex].setAttribute('aria-hidden', 'false');
+    this.thumbs[this.activeIndex].classList.add('is-active');
+    this.thumbs[this.activeIndex].setAttribute('aria-current', 'true');
+    this.thumbs[this.activeIndex].scrollIntoView({ inline: 'center', behavior: 'smooth' });
   }
 
   buildModal() {
@@ -150,7 +70,6 @@ class ProductGallery {
     this.items.forEach((item) => {
       const clone = item.cloneNode(true);
       clone.classList.remove('is-active');
-      if (item.classList.contains('is-hidden')) clone.classList.add('is-hidden');
       stage.appendChild(clone);
     });
 
@@ -227,15 +146,9 @@ class ProductGallery {
   }
 
   modalShow(i) {
-    if (!this.visibleIndices.length) return;
-    if (!this.visibleIndices.includes(i)) {
-      const currentVisible = this.visibleIndices.indexOf(this.activeIndex);
-      const dir = i > this.activeIndex ? 1 : -1;
-      const idx = (currentVisible + dir + this.visibleIndices.length) % this.visibleIndices.length;
-      i = this.visibleIndices[idx];
-    }
-    const prevIndex = this.activeIndex;
-    this.modalItems[prevIndex].classList.remove('is-active');
+    if (i < 0) i = this.modalItems.length - 1;
+    if (i >= this.modalItems.length) i = 0;
+    this.modalItems[this.activeIndex].classList.remove('is-active');
     this.modalItems[i].classList.add('is-active');
     this.show(i);
   }
