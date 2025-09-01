@@ -123,7 +123,7 @@
         "stacked_scroll": "never",
         "underline_active": false,
         "media_arrows": "always",
-        "show_slide_count": false,
+        "show_slide_count": true,
         "media_thumbs": "desktop",
         "lightbox_thumbnails": false,
         "thumb_ratio": "natural",
