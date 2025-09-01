@@ -2,11 +2,14 @@ class ProductGallery {
   constructor(root) {
     this.root = root;
     this.stage = root.querySelector('[data-stage]');
-    this.items = Array.from(root.querySelectorAll('.cg-gallery__item'));
-    this.thumbs = Array.from(root.querySelectorAll('.cg-gallery__thumb'));
+    this.allItems = Array.from(root.querySelectorAll('.cg-gallery__item'));
+    this.allThumbs = Array.from(root.querySelectorAll('.cg-gallery__thumb'));
+    this.items = this.allItems;
+    this.thumbs = this.allThumbs;
     this.prev = root.querySelector('.cg-gallery__arrow--prev');
     this.next = root.querySelector('.cg-gallery__arrow--next');
     this.activeIndex = 0;
+    this.activeVariantId = root.dataset.initialVariantId;
 
     this.prev.addEventListener('click', () => this.show(this.activeIndex - 1));
     this.next.addEventListener('click', () => this.show(this.activeIndex + 1));
@@ -16,6 +19,102 @@ class ProductGallery {
       btn.addEventListener('click', () => this.show(i));
       btn.addEventListener('keydown', (e) => this.onKey(e));
     });
+
+    if (root.hasAttribute('data-variant-media') && this.activeVariantId) {
+      this.filterGalleryByVariant(this.activeVariantId);
+    }
+
+    const section = root.closest('.js-product') || document;
+    section.addEventListener('on:variant:change', (e) => {
+      const variantId = e.detail?.variant?.id;
+      if (variantId) this.filterGalleryByVariant(String(variantId));
+    });
+
+    const variantInput = section.querySelector('[name="id"]');
+    if (variantInput) {
+      variantInput.addEventListener('change', (e) => this.filterGalleryByVariant(e.target.value));
+    }
+  }
+
+  filterGalleryByVariant(variantId) {
+    this.activeVariantId = variantId;
+    const currentMediaId = this.items[this.activeIndex]?.dataset.mediaId;
+    const visibleVariant = [];
+    const visibleShared = [];
+
+    this.allItems.forEach((item, idx) => {
+      const thumb = this.allThumbs[idx];
+      const ids = item.dataset.variantIds ? item.dataset.variantIds.split(',').filter(Boolean) : [];
+      const isShared = ids.length === 0;
+      const match = isShared || ids.includes(String(variantId));
+      if (match) {
+        item.classList.remove('is-hidden');
+        thumb.classList.remove('is-hidden');
+        if (isShared) {
+          visibleShared.push({ item, thumb });
+        } else {
+          visibleVariant.push({ item, thumb });
+        }
+      } else {
+        item.classList.add('is-hidden');
+        item.setAttribute('aria-hidden', 'true');
+        thumb.classList.add('is-hidden');
+      }
+    });
+
+    const combined = visibleVariant.concat(visibleShared);
+    this.items = combined.map((v) => v.item);
+    this.thumbs = combined.map((v) => v.thumb);
+
+    let newIndex = this.items.findIndex((item) => item.dataset.mediaId === currentMediaId);
+    if (newIndex === -1) {
+      if (visibleVariant.length > 0) {
+        newIndex = 0;
+      } else if (visibleShared.length > 0) {
+        newIndex = visibleVariant.length; // first shared
+      } else {
+        const featuredId = this.root.dataset.featuredMediaId;
+        const featuredIdx = this.allItems.findIndex((i) => i.dataset.mediaId === featuredId);
+        if (featuredIdx !== -1) {
+          const fItem = this.allItems[featuredIdx];
+          const fThumb = this.allThumbs[featuredIdx];
+          fItem.classList.remove('is-hidden');
+          fThumb.classList.remove('is-hidden');
+          this.items = [fItem];
+          this.thumbs = [fThumb];
+          newIndex = 0;
+        }
+      }
+    }
+
+    this.allItems.forEach((item) => {
+      item.classList.remove('is-active');
+      item.setAttribute('aria-hidden', 'true');
+    });
+    this.allThumbs.forEach((thumb) => {
+      thumb.classList.remove('is-active');
+      thumb.removeAttribute('aria-current');
+    });
+
+    if (this.items.length > 0) {
+      this.activeIndex = newIndex >= 0 ? newIndex : 0;
+      this.items[this.activeIndex].classList.add('is-active');
+      this.items[this.activeIndex].setAttribute('aria-hidden', 'false');
+      this.thumbs[this.activeIndex].classList.add('is-active');
+      this.thumbs[this.activeIndex].setAttribute('aria-current', 'true');
+      this.thumbs[this.activeIndex].scrollIntoView({ inline: 'center', behavior: 'smooth' });
+    } else {
+      this.activeIndex = 0;
+    }
+
+    if (document.activeElement.classList.contains('is-hidden')) {
+      this.stage.focus();
+    }
+
+    if (this.modal) {
+      this.modal.remove();
+      this.modal = null;
+    }
   }
 
   onKey(e) {
