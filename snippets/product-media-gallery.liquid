@@ -1,7 +1,7 @@
 {% comment %}
   Modern sticky product media gallery with lightbox.
 {% endcomment %}
-<div class="cg-gallery" data-gallery style="--gallery-max-w: {{ section.settings.gallery_max_width | default: 600 }}px">
+<div class="cg-gallery" data-gallery style="--gallery-max-w: {{ section.settings.gallery_max_width | default: 600 }}px; --gallery-aspect: 1/1;">
   <div class="cg-gallery__stage" data-stage tabindex="0" aria-live="polite">
     {% for media in product.media %}
       <div class="cg-gallery__item{% if forloop.first %} is-active{% endif %}" data-index="{{ forloop.index0 }}" aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}">
