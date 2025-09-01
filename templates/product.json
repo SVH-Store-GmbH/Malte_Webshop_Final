@@ -113,6 +113,7 @@
         "sticky_atc_mobile": true,
         "media_layout": "slider",
         "media_size": "default",
+        "gallery_max_width": 720,
         "media_ratio": "natural",
         "media_crop": "none",
         "enable_video_looping": false,
