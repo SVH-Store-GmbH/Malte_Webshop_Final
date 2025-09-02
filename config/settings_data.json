@@ -411,7 +411,7 @@
     "panel_text_color": "#594e42",
     "drawer_bg_color": "#ffffff",
     "drawer_text_color": "#000000",
-    "blend_product_images": false,
+    "blend_product_images": true,
     "blend_collection_images": true,
     "blend_bg_color": "#f5f5f5",
     "heading_font": "poppins_n9",
