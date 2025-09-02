@@ -61,7 +61,7 @@
         "button_label": "",
         "button_link": "",
         "layout": "carousel",
-        "card_size": "large",
+        "card_size": "medium",
         "use_product_image": false,
         "circle_image": false,
         "show_border": false,
